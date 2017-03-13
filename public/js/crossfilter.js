@@ -1097,9 +1097,9 @@
                             groupIndex = null;
                         }
                         filterListeners[filterListeners.indexOf(update)] = k > 1
-                            ? (reset = resetMany, update = updateMany) : k
-                            ===
-                            1 ? (reset = resetOne, update = updateOne) : reset = update = crossfilter_null;
+                            ? (reset = resetMany, update = updateMany): k
+                    ===
+                        1 ? (reset = resetOne, update = updateOne): reset = update = crossfilter_null;
                     } else if (k === 1) {
                         if (groupAll) return;
                         for (var i = 0; i < n; ++i) if (filters[i]) return;

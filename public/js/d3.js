@@ -4672,7 +4672,7 @@
         };
         projection.clipAngle = function (_) {
             if (!arguments.length) return clipAngle;
-            preclip = _ == null ? (clipAngle = _, d3_geo_clipAntimeridian) : d3_geo_clipCircle((clipAngle = +_) * d3_radians);
+            preclip = _ == null ? (clipAngle = _, d3_geo_clipAntimeridian): d3_geo_clipCircle((clipAngle = +_) * d3_radians);
             return invalidate();
         };
         projection.clipExtent = function (_) {
@@ -5201,10 +5201,10 @@
         }
 
         hull.x = function (_) {
-            return arguments.length ? (x = _, hull) : x;
+            return arguments.length ? (x = _, hull): x;
         };
         hull.y = function (_) {
-            return arguments.length ? (y = _, hull) : y;
+            return arguments.length ? (y = _, hull): y;
         };
         return hull;
     };
@@ -5941,10 +5941,10 @@
             return triangles;
         };
         voronoi.x = function (_) {
-            return arguments.length ? (fx = d3_functor(x = _), voronoi) : x;
+            return arguments.length ? (fx = d3_functor(x = _), voronoi): x;
         };
         voronoi.y = function (_) {
-            return arguments.length ? (fy = d3_functor(y = _), voronoi) : y;
+            return arguments.length ? (fy = d3_functor(y = _), voronoi): y;
         };
         voronoi.clipExtent = function (_) {
             if (!arguments.length) return clipExtent === d3_geom_voronoiClipExtent ? null : clipExtent;
@@ -6058,10 +6058,10 @@
         }
 
         quadtree.x = function (_) {
-            return arguments.length ? (x = _, quadtree) : x;
+            return arguments.length ? (x = _, quadtree): x;
         };
         quadtree.y = function (_) {
-            return arguments.length ? (y = _, quadtree) : y;
+            return arguments.length ? (y = _, quadtree): y;
         };
         quadtree.extent = function (_) {
             if (!arguments.length) return x1 == null ? null : [[x1, y1], [x2, y2]];
@@ -7918,7 +7918,7 @@
 
             var type;
             pad = (padding = x) == null ? d3_layout_treemapPadNull : (type = typeof x) === "function" ? padFunction : type === "number" ? (x = [x, x, x, x],
-                            padConstant) : padConstant;
+                                                                                                                                           padConstant): padConstant;
             return treemap;
         };
         treemap.round = function (x) {
