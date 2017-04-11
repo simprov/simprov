@@ -3,12 +3,14 @@ let configuration = {
     'userInterface': false,
     'username': 'TestUser',
     'realtime': false,
-    'onReload': false
+    'onReload': false,
+    'checkpointInterval': 2,
+    'checkpointCallback': dcCheckPointHarvester,
+    'databaseName': 'simprov'
 };
 
-let globalReset = false;
 let resetTrigger = false;
-let userAction = '';
+let globalReset = false;
 
 // Create SIMProv instance
 let simprov = new Simprov(configuration);
@@ -17,188 +19,174 @@ let simprov = new Simprov(configuration);
 let allDCCharts = simprov.dcRegistry();
 let [chart1, chart2, chart3] = allDCCharts;
 
-// Initialize SIMProv // Capture Initial State
-simprov.initialize().then(() => {
-    dcReaperHelper('Initial State');
+let chartMap = new Map();
+chartMap.set(chart1.chartID(), {
+    registry: chart1,
+    type: 'clickChart',
+    name: 'PieChart',
+    resetID: '#yearRingChartReset'
+});
+chartMap.set(chart2.chartID(), {
+    registry: chart2,
+    type: 'brushChart',
+    name: 'RangeChart',
+    resetID: '#spendHistChartReset'
+});
+chartMap.set(chart3.chartID(), {
+    registry: chart3,
+    type: 'clickChart',
+    name: 'RowChart',
+    resetID: '#spenderRowChartReset'
 });
 
-function dcReaper() {
-    let chartFilters = [];
-    for (let chart of allDCCharts) {
-        let tempFilter = chart.filters();
-        if (chart.chartID() == 2) {
-            if (chart.filters().length > 0) {
-                chartFilters.push([chart.filters()[0][0], chart.filters()[0][1]]);
+simprov.initialize();
+
+function dcCheckPointHarvester() {
+    let checkPointData = [];
+    for (let [key, value] of chartMap) {
+        let tempCheckPointData = {};
+        tempCheckPointData.chartID = value.registry.chartID();
+        if (value.type === 'clickChart') {
+            let tempFilters = Array.from(value.registry.filters());
+            if (tempFilters.length > 0) {
+                tempCheckPointData.data = tempFilters;
             }
             else {
-                chartFilters.push(tempFilter);
+                tempCheckPointData.data = null;
             }
         }
-        else {
-            chartFilters.push(tempFilter);
+        if (value.type === 'brushChart') {
+            let brushFilter = value.registry.filters();
+            if (brushFilter.length > 0) {
+                tempCheckPointData.data = [brushFilter[0][0], brushFilter[0][1]];
+            }
+            else {
+                tempCheckPointData.data = null;
+            }
         }
+        checkPointData.push(tempCheckPointData);
     }
-    // console.log(chartFilters);
-    return chartFilters;
+    return checkPointData;
 }
+// console.log(dcCheckPointHarvester());
 
-function dcReaperHelper(implicitUserAction) {
-    if (implicitUserAction !== undefined) {
-        simprov.acquire(dcReaper(), implicitUserAction);
-    }
-    else {
-        simprov.acquire(dcReaper(), userAction);
-    }
-}
-
-function dcImplanter(chartFilters) {
+function dcStateSower(seed) {
     dc.filterAll();
-    chartFilters.forEach((item, index) => {
-        if (index === 0) {
-            if (item.length === 0) {
-                return;
+    for (let [key, value] of chartMap) {
+        let filterValue = seed.find((item) => item.chartID === value.registry.chartID()).data;
+        if (value.type === 'clickChart') {
+            if (filterValue) {
+                value.registry.filter([filterValue]);
             }
             else {
-                chart1.filter([item]);
+                value.registry.filter(filterValue);
             }
         }
-        else if (index === 1) {
-            if (item.length === 0) {
-                return;
+        if (value.type === 'brushChart') {
+            if (filterValue) {
+                let brushFilter = dc.filters.RangedFilter(filterValue[0], filterValue[1]);
+                value.registry.filter(brushFilter);
             }
             else {
-                let tempFilter = dc.filters.RangedFilter(item[0], item[1]);
-                chart2.filter(tempFilter);
+                value.registry.filter(filterValue);
             }
         }
-        else {
-            if (item.length === 0) {
-                return;
-            }
-            else {
-                chart3.filter([item]);
-            }
-        }
-    });
+    }
     dc.redrawAll();
 }
 
-function informationHarvester(chart, filter) {
-    if (resetTrigger) {
-        if (!globalReset) {
-            userAction = `Reset Chart-${chart.chartID()}`;
-            dcReaperHelper();
-            // console.log(userAction);
-        }
-    }
-    else {
-        if (chart.hasFilter(filter)) {
-            userAction = `Applied Filter ${filter} on Chart-${chart.chartID()}`;
-            dcReaperHelper();
-            // console.log(userAction);
+function helperAddRemoveAction(chart, filter) {
+    if (!globalReset) {
+        let actionData = {};
+        actionData.chartID = chart.chartID();
+        actionData.name = chartMap.get(chart.chartID()).name;
+        actionData.forwardData = filter;
+        actionData.inverseData = filter;
+        if (!resetTrigger) {
+            if (chart.hasFilter(filter)) {
+                actionData.type = 'Add';
+            }
+            else {
+                actionData.type = 'Remove';
+            }
         }
         else {
-            userAction = `Removed Filter ${filter} on Chart-${chart.chartID()}`;
-            dcReaperHelper();
-            // console.log(userAction);
+            actionData.type = 'Reset';
+            resetTrigger = false;
         }
+        simprov.acquire(actionData);
     }
-    if (!globalReset) {
-        resetTrigger = false;
-    }
-    userAction = '';
 }
 
-// Attach dc.js filtered event handler
-chart1.on('filtered', (chart, filter) => {
-    informationHarvester(chart, filter);
-});
-
-// Attach jquery.js click event handler
-$("#yearRingChartReset").click(() => {
-    resetTrigger = true;
-});
-
-// Attach d3.js brush event handler
-chart2.brush().on("brushend.monitor", () => {
-    // Post execution to next cycle
+function helperBrushAction(chart, reset) {
     setTimeout(() => {
-        userAction = `Applied Range ${chart2.filters()[0].join(' to ')} on Chart-${chart2.chartID()}`;
-        dcReaperHelper();
-        // console.log(userAction);
-        userAction = '';
-    }, 0);
-});
+        let actionData = {};
+        actionData.chartID = chart.chartID();
+        actionData.name = chartMap.get(chart.chartID()).name;
+        if (!reset) {
+            actionData.forwardData = [chart.filters()[0][0], chart.filters()[0][1]];
+            actionData.type = 'Brush';
+        }
+        else {
+            actionData.forwardData = null;
+            actionData.type = 'Reset';
+        }
+        actionData.inverseData = null;
+        simprov.acquire(actionData);
+    });
+}
 
-// Attach jquery.js click event handler
-$("#spendHistChartReset").click(() => {
-    // Post execution to next cycle
-    setTimeout(() => {
-        userAction = `Reset Chart-${chart2.chartID()}`;
-        dcReaperHelper();
-        // console.log(userAction);
-        userAction = '';
-    }, 0);
-});
-
-// Attach dc.js filtered event handler
-chart3.on('filtered', (chart, filter) => {
-    informationHarvester(chart, filter);
-});
-
-// Attach jquery.js click event handler
-$("#spenderRowChartReset").click(() => {
-    resetTrigger = true;
-});
-
-// Attach jquery.js click event handler
-$("#allChartsReset").click(() => {
+function helperGlobalReset() {
+    let actionData = {};
     globalReset = true;
-    resetTrigger = true;
-    // Post execution to next cycle
+    actionData.forwardData = null;
+    actionData.inverseData = null;
+    actionData.type = 'GlobalReset';
     setTimeout(() => {
-        userAction = 'Reset All';
-        dcReaperHelper();
-        // console.log(userAction);
-        userAction = '';
         globalReset = false;
-        resetTrigger = false;
-    }, 0);
-});
-
-// Listen to simprov add event
-window.addEventListener('simprovAdded', e => {
-    // console.log(e.detail);
-    addRow(e.detail.stateCUID);
-});
-
-// Listen to simprov replay event
-window.addEventListener('simprovReplay', e => {
-    // console.log(e.detail);
-    dcImplanter(e.detail.provenanceData);
-});
-
-// Listen to simprov reload event
-window.addEventListener('simprovReloaded', e => {
-    // console.log(e.detail);
-    deleteRows();
-    for (let cuid of e.detail) {
-        addRow(cuid);
-    }
-});
-
-function addRow(stateCUID) {
-    let table = document.getElementById("stateTable");
-    let rowCount = table.rows.length;
-    let row = table.insertRow(rowCount);
-    row.insertCell(0).innerHTML = `<input type='button' id='${stateCUID}' value ='${stateCUID}' onClick='simprov.actionReplay(this.id)'>`;
+    });
+    simprov.acquire(actionData);
 }
 
-function deleteRows() {
-    let table = document.getElementById("stateTable");
-    let rowCount = table.rows.length;
-    for (let i = rowCount - 1; i > 0; i--) {
-        table.deleteRow(i);
+
+function actionAdd() {
+
+}
+
+function actionRemove() {
+
+}
+
+function actionReset() {
+
+}
+
+function actionBrush() {
+
+}
+
+function actionGlobalReset() {
+
+}
+
+for (let [key, value] of chartMap) {
+    if (value.type === 'clickChart') {
+        value.registry.on('filtered', (chart, filter) => {
+            helperAddRemoveAction(chart, filter);
+        });
+        $(value.resetID).click(() => {
+            resetTrigger = true;
+        });
+    }
+    if (value.type === 'brushChart') {
+        value.registry.brush().on("brushend.monitor", () => {
+            helperBrushAction(value.registry, false);
+        });
+        $(value.resetID).click(() => {
+            helperBrushAction(value.registry, true);
+        });
     }
 }
+
+$("#allChartsReset").click(helperGlobalReset); //Todo add document.ready
 

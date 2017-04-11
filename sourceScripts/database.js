@@ -1,8 +1,9 @@
 import Dexie from "dexie";
 
 export default class Database {
-    constructor() {
-        this.db = new Dexie("simprov");
+    constructor(configuration) {
+        this.dbName = configuration;
+        this.db = new Dexie(this.dbName);
     }
 
     addData(data, storeName = 'provenance') {
@@ -22,12 +23,12 @@ export default class Database {
         return this.db[storeName].delete(primaryKey); //Todo check table exists
     }
 
-    deleteDB(dbName) { //Todo check DB exists
+    deleteDB(dbName = this.dbName) { //Todo check DB exists
         this.db.close();
         return Dexie.delete(dbName);
     }
 
-    existsDB(dbName = 'simprov') {
+    existsDB(dbName = this.dbName) {
         return Dexie.exists(dbName);
     }
 
@@ -41,7 +42,7 @@ export default class Database {
 
     initializeDB() {
         this.db.version(1).stores({
-            provenance: "stateCUID"
+            provenance: "actionCUID"
         });
     }
 

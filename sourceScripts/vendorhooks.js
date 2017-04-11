@@ -12,12 +12,12 @@ export default class VendorHooks {
 
     dcRegistry(...exclude) {
         this.isDCInitialized();
-        let tempChartRegistry = [...dc.chartRegistry.list()];
+        let tempChartRegistry = Array.from(dc.chartRegistry.list());
         if (exclude !== undefined) {
             exclude.sort((a, b) => {
                 return a - b;
             });
-            exclude.forEach((item, index, array) => {
+            exclude.forEach(function (item, index, array) {
                 array[index] = item - 1;
             });
             while (exclude.length) {
