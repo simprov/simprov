@@ -1,4 +1,4 @@
-import Dexie from "dexie";
+import Dexie from 'dexie';
 
 export default class Database {
     constructor(configuration) {
@@ -16,6 +16,10 @@ export default class Database {
 
     clearTable(storeName = 'provenance') { //Todo check table exists
         return this.db[storeName].clear();
+    }
+
+    checkDBStatus(){
+        return Promise.resolve(Dexie.isOpen());
     }
 
     // deleteTableContentByPrimaryKey
@@ -41,8 +45,12 @@ export default class Database {
     }
 
     initializeDB() {
-        this.db.version(1).stores({
-            provenance: "actionCUID"
+        return new Promise((resolve) => {
+            this.db.version(1).stores({
+                provenance: 'actionCUID',
+                cache: '++'
+            });
+            resolve();
         });
     }
 
@@ -54,8 +62,12 @@ export default class Database {
         return this.db[storeName].count();
     }
 
-    updateObject(primaryKey, update, storeName = 'provenance') {
-        return this.db[storeName].update(primaryKey, update);
+    updateObject(primaryKey, updateData, storeName = 'provenance') {
+        return this.db[storeName].update(primaryKey, updateData);
+    }
+
+    dexieVersion() {
+        return Promise.resolve(Dexie.semVer);
     }
 
     classDatabaseInformation() {

@@ -3,9 +3,17 @@ let configuration = {
     'userInterface': false,
     'username': 'TestUser',
     'realtime': false,
-    'onReload': false,
+    'verbose': true,
+    'thumbnailOptions': {
+        cropLeftOffset: 0,
+        cropTopOffset: 0,
+        thumbnailWidth: 900,
+        thumbnailHeight: 340,
+        captureTimeout: 1000
+    },
+    'actions': {},
     'checkpointInterval': 2,
-    'checkpointCallback': dcCheckPointHarvester,
+    'checkpointGet': dcCheckPointHarvester,
     'databaseName': 'simprov'
 };
 
@@ -105,9 +113,11 @@ function helperAddRemoveAction(chart, filter) {
         if (!resetTrigger) {
             if (chart.hasFilter(filter)) {
                 actionData.type = 'Add';
+                actionData.inverseAction = 'Remove';
             }
             else {
                 actionData.type = 'Remove';
+                actionData.inverseAction = 'Add';
             }
         }
         else {

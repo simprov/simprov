@@ -1,13 +1,17 @@
 export default class VendorHooks {
-    constructor() {
+    constructor(configuration) {
+        this.verboseVH = configuration;
     }
 
     isDCInitialized() {
         if (typeof window.dc === 'undefined') {
-            throw '> dc.js is not initialized';
-        } else
-            console.log('Simprov:> dc.js is initialized');
-        return true;
+            new Error('Simprov:> dc.js is not initialized');
+        } else {
+            if (this.verboseVH) {
+                console.log('Simprov:> dc.js is initialized');
+            }
+            return true;
+        }
     }
 
     dcRegistry(...exclude) {
