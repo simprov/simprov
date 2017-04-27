@@ -10,6 +10,10 @@ export default class Database {
         return this.db[storeName].add(data);
     }
 
+    putData(data, storeName = 'provenance', primaryKey) {
+        return this.db[storeName].put(data, primaryKey);
+    }
+
     bulkAddData(bulkData, storeName = 'provenance') {
         return this.db[storeName].bulkAdd(bulkData);
     }
@@ -18,7 +22,7 @@ export default class Database {
         return this.db[storeName].clear();
     }
 
-    checkDBStatus(){
+    checkDBStatus() {
         return Promise.resolve(Dexie.isOpen());
     }
 
@@ -71,6 +75,6 @@ export default class Database {
     }
 
     classDatabaseInformation() {
-        console.log('Simprov:> This is Class Database');
+        console.log('This is Class Database');
     }
 }

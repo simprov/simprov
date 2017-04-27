@@ -11,9 +11,16 @@ let configuration = {
         thumbnailHeight: 340,
         captureTimeout: 1000
     },
-    'actions': {},
+    'actions': {
+        'Add': actionAdd,
+        'Remove': actionRemove,
+        'Brush': actionBrush,
+        'Reset': actionReset,
+        'GlobalReset': actionGlobalReset
+    },
     'checkpointInterval': 2,
     'checkpointGet': dcCheckPointHarvester,
+    'checkpointSet': dcStateSower,
     'databaseName': 'simprov'
 };
 
@@ -147,36 +154,85 @@ function helperBrushAction(chart, reset) {
 }
 
 function helperGlobalReset() {
-    let actionData = {};
     globalReset = true;
+    let actionData = {};
     actionData.forwardData = null;
     actionData.inverseData = null;
     actionData.type = 'GlobalReset';
     setTimeout(() => {
+        simprov.acquire(actionData);
         globalReset = false;
     });
-    simprov.acquire(actionData);
 }
 
-
-function actionAdd() {
-
+function actionAdd(seed, actionContent, isState) {
+    if (isState) {
+        for (let item of seed) {
+            if (item.chartID === actionContent.actionData.chartID) {
+                let tempData = actionContent.actionData.forwardData;
+                if (!item.data) {
+                    item.data = [];
+                }
+                item.data.push(tempData);
+                break;
+            }
+        }
+        return seed;
+    }
+    else {
+        helperAddRemoveActions(actionContent);
+    }
 }
 
-function actionRemove() {
-
+function actionRemove(seed, actionContent, isState) {
+    if (isState) {
+        for (let item of seed) {
+            if (item.chartID === actionContent.actionData.chartID) {
+                let tempData = actionContent.actionData.forwardData;
+                item.data.splice(item.data.indexOf(tempData), 1);
+                if (!item.data.length) {
+                    item.data = null;
+                }
+                break;
+            }
+        }
+        return seed;
+    }
+    else {
+        helperAddRemoveActions(actionContent);
+    }
 }
 
-function actionReset() {
-
+function helperAddRemoveActions(actionContent) {
+    let tempActionData = actionContent.actionData;
+    let tempChart = chartMap.get(tempActionData.chartID);
+    tempChart.registry.filter(tempActionData.inverseData);
+    dc.redrawAll();
 }
 
-function actionBrush() {
-
+function actionReset(seed, actionContent) {
+    return helperBrushResetActions(seed, actionContent);
 }
 
-function actionGlobalReset() {
+function actionBrush(seed, actionContent) {
+    return helperBrushResetActions(seed, actionContent);
+}
 
+function helperBrushResetActions(seed, actionContent) {
+    for (let item of seed) {
+        if (item.chartID === actionContent.actionData.chartID) {
+            item.data = actionContent.actionData.forwardData;
+            break;
+        }
+    }
+    return seed;
+}
+
+function actionGlobalReset(seed, actionContent) {
+    for (let item of seed) {
+        item.data = actionContent.actionData.forwardData;
+    }
+    return seed;
 }
 
 for (let [key, value] of chartMap) {

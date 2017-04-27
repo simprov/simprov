@@ -4,7 +4,7 @@
     <title>dc.js</title>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/favicon-32x32.png" sizes="32x32"/>
-    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+    <link rel="stylesheet" type="text/css" href="css/sweetalert2.min.css">
     <link rel="stylesheet" type="text/css" href="css/dc.css"/>
     <link rel="stylesheet" href="css/modify.css">
 </head>
@@ -130,24 +130,26 @@
     </script>
 
 </div>
-<div style="clear: both;">
+<div style="clear: both; text-align: center">
+    <br>
     <br>
     <a id="allChartsReset" href="javascript:dc.filterAll();dc.redrawAll();"
-       style="display: inline-block; width: 100%; text-align: center">Reset All</a>
+       style="display: inline-block; width: 100%; text-align: center; text-decoration: none; font-weight: bold">Reset All</a>
+    <!--<input id="allChartsReset" type='button' value="ResetAll" onclick='dc.filterAll();dc.redrawAll();'>-->
 </div>
 
-<div class="container">
-    <br>
-    <br>
+<div class="container" style="text-align: center">
     <br>
     <input type='button' value="Undo" onclick='simprov.undoAction();'>
     <input type='button' value="Redo" onclick='simprov.redoAction();'>
-    <input type='button' value="ExportJson" onclick='simprov.exportProvenance();'>
+    <input type='button' value="ExportJson" onclick='simprov.exportProvenance("json");'>
     <input type='button' value="ExportGist" onclick='simprov.exportProvenance("gist");'>
-    <input type='button' value="ImportJson" onclick='simprov.loadJson();'>
-    <input type='button' value="ImportGist"
-           onclick='simprov.importProvenance("gist" , prompt("Please enter the gist ID", ""));'>
-    <table id="stateTable" cellpadding="5">
+    <input type='button' value="ImportJson" onclick='simprov.importProvenance("json");'>
+    <input type='button' value="ImportGist" onclick='simprov.importProvenance("gist");'>
+    <input type='button' value="ConsoleTree" onclick='simprov.printTree();'>
+    <input type='button' value="ClearStorage" onclick='simprov.resetAll();'>
+    <br>
+    <table id="actionTable" cellpadding="5" style="margin-left:auto; margin-right:auto">
         <tr>
             <th><b>Replay</b></th>
         </tr>
@@ -156,5 +158,6 @@
 <!-- SIMProv Imports-->
 <script type="text/javascript" src="simprov.dev.js"></script>
 <script type="text/javascript" src="js/simprov.hook.js"></script>
+<script src="js/simprov.tester.js"></script>
 </body>
 </html>

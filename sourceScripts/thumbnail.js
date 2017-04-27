@@ -111,6 +111,6 @@ export default class Thumbnail {
     }
 
     classThumbnailInformation() {
-        console.log('Simprov:> This is Class Thumbnail');
+        console.log('This is Class Thumbnail');
     }
 }

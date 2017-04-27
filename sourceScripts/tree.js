@@ -1,4 +1,5 @@
 import TreeModel from 'tree-model';
+import treeify from 'treeify';
 
 export default class Tree {
     constructor() {
@@ -23,22 +24,22 @@ export default class Tree {
         });
     }
 
-   async actionSequencer(requiredID){
-       let foundNode = await this.findNode(requiredID);
-       if (foundNode.model.checkpoint) {
-           return foundNode.model.id;
-       }
-       let nodePath = foundNode.getPath();
-       nodePath.reverse();
-       let checkpointObject = nodePath.find((node) => node.model.checkpoint === true);
-       nodePath.reverse();
-       let checkpointOIndex = nodePath.indexOf(checkpointObject);
-       let sequenceArray = nodePath.splice(checkpointOIndex);
-       let finalSequence = [];
-       for (let node of sequenceArray) {
-           finalSequence.push(node.model.id);
-       }
-       return finalSequence;
+    async actionSequencer(requiredID) {
+        let foundNode = await this.findNode(requiredID);
+        if (foundNode.model.checkpoint) {
+            return foundNode.model.id;
+        }
+        let nodePath = foundNode.getPath();
+        nodePath.reverse();
+        let checkpointObject = nodePath.find((node) => node.model.checkpoint === true);
+        nodePath.reverse();
+        let checkpointOIndex = nodePath.indexOf(checkpointObject);
+        let sequenceArray = nodePath.splice(checkpointOIndex);
+        let finalSequence = [];
+        for (let node of sequenceArray) {
+            finalSequence.push(node.model.id);
+        }
+        return finalSequence;
     }
 
     async addTree(requiredTree, requiredCurrentNode) {
@@ -59,12 +60,13 @@ export default class Tree {
         return Promise.resolve(this.simprovTree.model);
     }
 
-    getCurrentNode() {
+    getCurrentNodeID() {
         return Promise.resolve(this.currentNode.model.id);
     }
 
-    setCurrentNode(node) {
-
+    async setCurrentNode(node) {
+        let tempNode = await this.findNode(node);
+        this.currentNode = tempNode;
     }
 
     nodeMaker(cuid, checkpoint, inverse) {
@@ -73,13 +75,14 @@ export default class Tree {
 
     printTree() {
         return new Promise((resolve) => {
-            let tempTree = JSON.stringify(this.simprovTree.model, null, '\t');
-            console.log(tempTree);
+            let tempTree = this.simprovTree.model;
+            console.log('%cSimprov%c:>> %cTree', 'color:#FFD700', 'color:#FF4500', 'color:#bada55');
+            console.log(`%c${treeify.asTree(tempTree, true)}`, 'color:#BADA55');
             resolve();
         });
     }
 
     classTreeInformation() {
-        console.log('Simprov:> This is Class Tree');
+        console.log('This is Class Tree');
     }
 }
