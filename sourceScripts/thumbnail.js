@@ -1,4 +1,4 @@
-import rasterizeHTML from 'rasterizehtml/dist/rasterizeHTML.allinone';
+import rasterizeHTML from './rasterizeHTML.allinone'; //TODO remember to update file, when new version from npm
 
 export default class Thumbnail {
     constructor() {

@@ -8,10 +8,14 @@ import {mixin} from 'es6-mixin';
 import cuid from 'cuid';
 
 
-export default class SimprovCore {
+export default class Core {
     constructor(configuration) {
         this.userName = configuration.username || 'SIMProvUser';
         this.verboseSC = configuration.verbose || false;
+        this.realtime = configuration.realtime || false;
+        this.databaseName = configuration.databaseName || 'simprov';
+        this.startTimeFrame = configuration.startTimeFrame || Date.now();
+        this.persistent = true;
         this.checkpointInterval = configuration.checkpointInterval;
         this.configuredActions = configuration.actions;
         this.checkpointCounter = 0;
@@ -21,8 +25,8 @@ export default class SimprovCore {
         this.userCUID = cuid();
         this.replayTrigger = false;
         this.redoSequence = [];
-        mixin(this, Database, configuration.databaseName);
-        mixin(this, VendorHooks, configuration.verbose);
+        mixin(this, Database, this.databaseName);
+        mixin(this, VendorHooks, this.verboseSC);
         mixin(this, Utilities);
         mixin(this, Backup);
         mixin(this, Tree);
@@ -65,6 +69,18 @@ export default class SimprovCore {
         });
     }
 
+    async addToStream(streamData) {
+        if (streamData.length) {
+            if (streamData.length === 1) {
+                await this.addData(streamData[0], 'stream');
+            }
+            else {
+                await this.bulkAddData(streamData, 'stream');
+            }
+            await this.consoleOutput('Stream add operation completed', false);
+        }
+    }
+
     async acquire(provenanceData) {
         if (!this.replayTrigger) {
             let isInvertible = 'inverseAction' in provenanceData;
@@ -88,7 +104,7 @@ export default class SimprovCore {
             await this.createThumbnail(dbCUID);
             await this.createCustomEvent(await this.getObject(dbCUID), 'simprov.added');
             this.redoSequence = [];
-            await this.consoleOutput('Add operation completed', true);
+            await this.consoleOutput('Provenance add operation completed', true);
         }
     }
 
@@ -100,34 +116,65 @@ export default class SimprovCore {
         });
     }
 
+    onEvent(eventType, eventFunction) {
+        return new Promise((resolve) => {
+            window.addEventListener(eventType, (e) => {
+                eventFunction(e.detail);
+            });
+            resolve();
+        });
+    }
+
     async exportProvenance(exportType) {
         let tempExportArray = await this.fetchAll();
         let tempCache = await this.getObject(1, 'cache');
         tempExportArray.push(tempCache);
         tempExportArray.push({fileIntegrity: await this.hashComputor(tempExportArray)});
         if (exportType === 'json') {
-            await this.downloadJson(tempExportArray);
+            await this.downloadJson(tempExportArray, 'simprov.json');
             await this.consoleOutput('simprov.json download completed', false);
-            await this.jsonConfirmation();
+            await this.jsonConfirmation('Provenance Exported', 'simprov.json downloaded');
         }
         else {
-            let gitResponse = await this.publishGist(tempExportArray);
+            let gitResponse = await this.publishGist(tempExportArray, 'simprov.json', 'Simprov Provenance Data');
             await this.consoleOutput(`Github URL: ${gitResponse[0]}`, false);
             await this.consoleOutput(`Gist ID: ${gitResponse[1]}`, false);
             await this.consoleOutput('Gist Publish Completed', false);
-            await this.gistConfirmation(gitResponse);
+            await this.gistConfirmation(gitResponse, 'Provenance Exported');
+        }
+    }
+
+    async exportStream(exportType) {
+        let tempExportArray = await this.fetchAll('stream');
+        if (tempExportArray.length) {
+            tempExportArray.push({fileIntegrity: await this.hashComputor(tempExportArray)});
+            if (exportType === 'json') {
+                await this.downloadJson(tempExportArray, 'stream.json');
+                await this.consoleOutput('stream.json download completed', false);
+                await this.jsonConfirmation('Stream Exported', 'stream.json downloaded');
+            }
+            else {
+                let gitResponse = await this.publishGist(tempExportArray, 'stream.json', 'Simprov Stream Data');
+                await this.consoleOutput(`Github URL: ${gitResponse[0]}`, false);
+                await this.consoleOutput(`Gist ID: ${gitResponse[1]}`, false);
+                await this.consoleOutput('Gist Publish Completed', false);
+                await this.gistConfirmation(gitResponse, 'Stream Exported');
+            }
+        }
+        else {
+            await this.consoleOutput('Nothing in stream to export', false);
         }
     }
 
     async importProvenance(importType) {
         let tempArray = [];
         if (importType === 'json') {
-            tempArray = await this.loadJson();
+            tempArray = await this.loadJson('Import Provenance');
         }
         else {
-            let gistID = await this.gistInput();
+            let gistID = await this.gistInput('Import Provenance');
             if (gistID) {
-                tempArray = await this.retriveGist(gistID);
+                tempArray = await this.retriveGist(gistID, 'simprov.json');
             }
             else {
                 tempArray = null;
@@ -138,6 +185,7 @@ export default class SimprovCore {
             let tempHash = await this.hashComputor(tempArray);
             if (tempIntegrity === tempHash) {
                 let cachedInformation = tempArray.pop();
+                this.persistent = cachedInformation.persistent;
                 let userCredentialDecision = await this.userCredentialDecision();
                 if (userCredentialDecision) {
                     this.userName = cachedInformation.username;
@@ -164,7 +212,7 @@ export default class SimprovCore {
                 await this.bulkAddData(tempArray);
                 let addCount = await this.tableCount();
                 await this.consoleOutput(`Import from ${importType} completed`, false);
-                await this.consoleOutput(`${addCount} records added to database`, false);
+                await this.consoleOutput(`${addCount} records added to provenance database`, false);
                 await this.importConfirmation(addCount);
                 await this.createCustomEvent(await this.fetchAll(), 'simprov.imported');
                 await this.delayActionReplay(tempCurrentNodeID, true, 0);
@@ -176,8 +224,40 @@ export default class SimprovCore {
         }
     }
 
+    async importStream(importType) {
+        let tempArray = [];
+        if (importType === 'json') {
+            tempArray = await this.loadJson('Import Stream');
+        }
+        else {
+            let gistID = await this.gistInput('Import Stream');
+            if (gistID) {
+                tempArray = await this.retriveGist(gistID, 'stream.json');
+            }
+            else {
+                tempArray = null;
+            }
+        }
+        if (tempArray) {
+            let tempIntegrity = tempArray.pop().fileIntegrity;
+            let tempHash = await this.hashComputor(tempArray);
+            if (tempIntegrity === tempHash) {
+                await this.clearTable('stream');
+                await this.bulkAddData(tempArray, 'stream');
+                let addCount = await this.tableCount('stream');
+                await this.consoleOutput(`Import from ${importType} completed`, false);
+                await this.consoleOutput(`${addCount} records added to stream database`, false);
+                await this.importConfirmation(addCount);
+            }
+            else {
+                await this.consoleOutput('Corrupt file imported', false);
+                await this.corruptConfirmation();
+            }
+        }
+    }
+
     async initialize() {
-        let dbExists = await this.existsDB();
+        let dbExists = await Simprov.existsDB(this.databaseName);
         if (dbExists) {
             await this.initializeDB();
             let cachedInformation = await this.getObject(1, 'cache');
@@ -187,6 +267,7 @@ export default class SimprovCore {
             let tempSimprovTree = cachedInformation.tree;
             let tempCurrentNodeID = cachedInformation.currentNodeID;
             await this.addTree(tempSimprovTree, tempCurrentNodeID);
+            this.persistent = cachedInformation.persistent;
             await this.consoleOutput('Load from database operation completed', false);
             await this.createCustomEvent(await this.fetchAll(), 'simprov.reloaded');
             await this.delayActionReplay(tempCurrentNodeID, true);
@@ -201,7 +282,8 @@ export default class SimprovCore {
                 userCUID: this.userCUID,
                 checkpointCounter: this.checkpointCounter,
                 tree: await this.getTree(),
-                currentNodeID: await this.getCurrentNodeID()
+                currentNodeID: await this.getCurrentNodeID(),
+                persistent: this.persistent
             };
             await this.initializeDB();
             await this.putData(tempCache, 'cache', 1);
@@ -263,17 +345,18 @@ export default class SimprovCore {
             if (tempCurrentNode.model.inverse) {
                 let tempObject = await this.getObject(tempCurrentID);
                 let tempAction = tempObject.actionData.inverseAction;
-                this.configuredActions[tempAction](null, tempObject, false);
+                let parentObject = await this.getObject(tempCurrentNode.parent.model.id);
+                this.configuredActions[tempAction](null, tempObject, false, await this.streamDataFetcher(parentObject.timeStamp));
             }
             else {
                 let actionSequence = await this.actionSequencer(tempCurrentNode.parent.model.id);
                 if (Array.isArray(actionSequence)) {
-                    let tempSeed = await this.stateIntegrator(actionSequence);
-                    this.checkpointEmit(tempSeed);
+                    let integratedObject = await this.stateIntegrator(actionSequence);
+                    this.checkpointEmit(integratedObject.seed, integratedObject.streamData);
                 }
                 else {
                     let tempObject = await this.getObject(actionSequence);
-                    this.checkpointEmit(tempObject.checkpoint);
+                    this.checkpointEmit(tempObject.checkpoint, await this.streamDataFetcher(tempObject.timeStamp));
                 }
             }
             await this.setCurrentNode(tempCurrentNode.parent.model.id);
@@ -285,6 +368,19 @@ export default class SimprovCore {
             await this.consoleOutput('Nothing to undo', false);
         }
         this.replayTrigger = false;
+    }
+
+    async persistentMode(modeBoolean) {
+        if (modeBoolean !== undefined) {
+            this.persistent = modeBoolean;
+            await this.updateObject(1, {
+                persistent: this.persistent
+            }, 'cache');
+            await this.consoleOutput(`Changed persistent mode to ${this.persistent}`, true);
+        }
+        else {
+            return this.persistent;
+        }
     }
 
     async redoAction() {
@@ -303,12 +399,12 @@ export default class SimprovCore {
     async replayHelper(nodeID) {
         let actionSequence = await this.actionSequencer(nodeID);
         if (Array.isArray(actionSequence)) {
-            let tempSeed = await this.stateIntegrator(actionSequence);
-            this.checkpointEmit(tempSeed);
+            let integratedObject = await this.stateIntegrator(actionSequence);
+            this.checkpointEmit(integratedObject.seed, integratedObject.streamData);
         }
         else {
             let tempObject = await this.getObject(actionSequence);
-            this.checkpointEmit(tempObject.checkpoint);
+            this.checkpointEmit(tempObject.checkpoint, await this.streamDataFetcher(tempObject.timeStamp));
         }
         await this.setCurrentNode(nodeID);
         await this.updateObject(1, {currentNodeID: await this.getCurrentNodeID()}, 'cache');
@@ -316,6 +412,9 @@ export default class SimprovCore {
 
     async stateIntegrator(actionSequence) {
         let tempSeed = [];
+        let sequenceLength = actionSequence.length;
+        let integratedObject = {};
+        integratedObject.streamData = null;
         for (let [key, value] of actionSequence.entries()) {
             if (key === 0) {
                 let tempObject = await this.getObject(value);
@@ -325,9 +424,29 @@ export default class SimprovCore {
                 let tempObject = await this.getObject(value);
                 let tempAction = tempObject.actionData.type;
                 tempSeed = this.configuredActions[tempAction](tempSeed, tempObject, true);
+                if (this.realtime && key === sequenceLength - 1) {
+                    integratedObject.streamData = await this.streamDataFetcher(tempObject.timeStamp);
+                }
             }
         }
-        return (tempSeed);
+        integratedObject.seed = tempSeed;
+        return integratedObject;
+    }
+
+    async streamDataFetcher(requiredTimestamp) {
+        let streamData = [];
+        if (this.realtime) {
+            if (this.persistent) {
+                streamData = await this.fetchAll('stream');
+            }
+            else {
+                streamData = await this.streamFetcher(this.startTimeFrame, requiredTimestamp);
+            }
+        }
+        if (!streamData.length) {
+            streamData = null;
+        }
+        return streamData;
     }
 
     async resetAll() {
@@ -335,7 +454,9 @@ export default class SimprovCore {
         if (deleteDecision) {
             await this.deleteDB();
             console.clear();
-            location.reload(true);
+            setTimeout(() => {
+                location.reload(true);
+            }, 2000);
         }
     }
 
@@ -344,13 +465,21 @@ export default class SimprovCore {
             if (infoRequired) {
                 let timeStamp = await this.timeStampMaker();
                 let tempConsoleMessage = `%cSimprov%c@%c${this.userName}%c:%c[${timeStamp}]%c>> %c${consoleMessage}`;
-                console.log(tempConsoleMessage, 'color:#FFD700', 'color:#F0FFFF', 'color:#9ACD32', 'color:#FF4500', 'color:#AFEEEE', 'color:#FF4500', 'color:#BADA55');
+                console.log(tempConsoleMessage, 'color:#FF4500', 'color:#9ACD32', 'color:#1E90FF', 'color:#FF6347', 'color:#DAA520', 'color:#FF6347', 'color:#32CD32');
             }
             else {
                 let tempConsoleMessage = `%cSimprov%c:>> %c${consoleMessage}`;
-                console.log(tempConsoleMessage, 'color:#FFD700', 'color:#FF4500', 'color:#bada55');
+                console.log(tempConsoleMessage, 'color:#FF4500', 'color:#FF6347', 'color:#32CD32');
             }
         }
+    }
+
+    static async usernameInput() {
+        return await Utilities.usernameInputHelper();
+    }
+
+    static async existsDB(dbName) {
+        return await Database.existsDBHelper(dbName);
     }
 
     classSimprovCoreInformation() {

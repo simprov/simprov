@@ -30,9 +30,9 @@ export default class Utilities {
         });
     }
 
-    async loadJson() {
+    async loadJson(titleText) {
         let inputFile = await swal({
-            title: 'Import Provenance',
+            title: titleText,
             type: 'question',
             input: 'file',
             showCancelButton: true,
@@ -72,13 +72,14 @@ export default class Utilities {
                 text: 'Update Username and CUID from file?',
                 type: 'question',
                 showCancelButton: true,
+                showCloseButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
                 confirmButtonColor: '#5cb85c',
                 allowOutsideClick: false,
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc') {
+            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
                 decision = false;
             }
         }
@@ -93,20 +94,21 @@ export default class Utilities {
                 text: 'Update records with current Username and CUID?',
                 type: 'question',
                 showCancelButton: true,
+                showCloseButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
                 confirmButtonColor: '#5cb85c',
                 allowOutsideClick: false,
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc') {
+            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
                 decision = false;
             }
         }
         return decision;
     }
 
-    async gistInput() {
+    async gistInput(titleText) {
         let validator = (input) => {
             return new Promise(function (resolve, reject) {
                 if (input) {
@@ -122,7 +124,7 @@ export default class Utilities {
             });
         };
         let gistID = await swal({
-            title: 'Import Provenance',
+            title: titleText,
             text: 'Enter Gist ID',
             input: 'text',
             inputPlaceholder: 'Gist ID',
@@ -146,9 +148,9 @@ export default class Utilities {
         }
     }
 
-    async gistConfirmation(gistInformation) {
+    async gistConfirmation(gistInformation, titleText) {
         await swal({
-            title: 'Provenance Exported',
+            title: titleText,
             html: `<a href=${gistInformation[0]} style="text-decoration: none; color:#a5dc86" target="_blank">Explore on GitHub</a>`,
             input: 'text',
             inputValue: `             ${gistInformation[1]}`,
@@ -162,10 +164,10 @@ export default class Utilities {
         }).catch(swal.noop);
     }
 
-    async jsonConfirmation() {
+    async jsonConfirmation(titleText, textText) {
         await swal({
-            title: 'Provenance Exported',
-            text: 'simprov.json downloaded',
+            title: titleText,
+            text: textText,
             type: 'success',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
@@ -209,7 +211,7 @@ export default class Utilities {
                 allowOutsideClick: false,
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc') {
+            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
                 decision = false;
             }
         }
@@ -224,6 +226,38 @@ export default class Utilities {
             }).catch(swal.noop);
         }
         return decision;
+    }
+
+    static async usernameInputHelper() {
+        let validator = (input) => {
+            return new Promise(function (resolve, reject) {
+                if (input) {
+                    if (input.length < 6) {
+                        reject('Please enter a valid six characters plus username');
+                    }
+                    else {
+                        resolve();
+                    }
+                } else {
+                    reject('Please enter a valid six characters plus username');
+                }
+            });
+        };
+        let usernameInput = await swal({
+            title: 'Username',
+            text: 'Enter username',
+            input: 'text',
+            inputPlaceholder: 'username',
+            inputAttributes: {
+                maxlength: '16'
+            },
+            type: 'question',
+            confirmButtonColor: '#5cb85c',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            inputValidator: validator
+        }).catch(swal.noop);
+        return usernameInput;
     }
 
     classUtilitiesInformation() {

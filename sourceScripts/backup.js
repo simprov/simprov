@@ -2,12 +2,12 @@ export default class Backup {
     constructor() {
     }
 
-    async publishGist(gistData) {
+    async publishGist(gistData, fileName, fileDescription) {
         let postContent = {
-            description: 'Simprov Provenance Data',
+            description: fileDescription,
             public: true,
             files: {
-                'simprov.json': {
+                [fileName]: {
                     content: JSON.stringify(gistData)
                 }
             }
@@ -20,21 +20,21 @@ export default class Backup {
         return [responseData.html_url, responseData.id];
     }
 
-    async retriveGist(gistID) { //TODO handle invalid ID
+    async retriveGist(gistID, fileName) { //TODO handle invalid ID
         let fetchFrom = `https://api.github.com/gists/${gistID}`;
         let response = await fetch(fetchFrom, {
             method: 'get'
         });
         let responseData = await response.json();
-        return (JSON.parse(responseData.files['simprov.json'].content));
+        return (JSON.parse(responseData.files[fileName].content));
     }
 
-    downloadJson(jsonData) {
+    downloadJson(jsonData, fileName) {
         return new Promise((resolve) => {
             let data = `text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(jsonData))}`;
             let link = document.createElement('a');
             link.href = `data:${data}`;
-            link.download = 'simprov.json';
+            link.download = fileName;
             let documentBody = document.body;
             documentBody.appendChild(link);
             link.click();

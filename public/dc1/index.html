@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc1</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="css/favicon-32x32.png" sizes="32x32"/>
+    <link rel="stylesheet" type="text/css" href="css/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+    <link rel="stylesheet" href="css/modify.css">
+</head>
+<body>
+
+<!--<div class="container">-->
+<div>
+    <!--<script type="text/javascript" src="js/header.js"></script>-->
+    <div id="chart-ring-year" style="width:300px; height:300px">
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+            <a id="yearRingChartReset" href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
+            <!-- Added id-->
+        </div>
+    </div>
+    <div id="chart-hist-spend" style="width:300px; height:300px">
+        <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+            <a id="spendHistChartReset" href="javascript:spendHistChart.filterAll();dc.redrawAll();">reset</a>
+            <!-- Added id-->
+        </div>
+    </div>
+    <div id="chart-row-spenders" style="width:300px; height:300px">
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+            <a id="spenderRowChartReset" href="javascript:spenderRowChart.filterAll();dc.redrawAll();">reset</a>
+            <!-- Added id-->
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="js/d3.js"></script>
+    <script type="text/javascript" src="js/crossfilter.js"></script>
+    <script type="text/javascript" src="js/dc.js"></script>
+    <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+
+        var yearRingChart = dc.pieChart("#chart-ring-year"),
+            spendHistChart = dc.barChart("#chart-hist-spend"),
+            spenderRowChart = dc.rowChart("#chart-row-spenders");
+
+        // use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
+        var spendData = [
+            {Name: 'Mr A', Spent: 10, Year: 2011},
+            {Name: 'Mr B', Spent: 20, Year: 2011},
+            {Name: 'Mr C', Spent: 30, Year: 2011},
+            {Name: 'Mr D', Spent: 10, Year: 2011},
+            {Name: 'Mr A', Spent: 40, Year: 2012},
+            {Name: 'Mr B', Spent: 50, Year: 2012},
+            {Name: 'Mr C', Spent: 30, Year: 2012},
+            {Name: 'Mr D', Spent: 20, Year: 2012},
+            {Name: 'Mr A', Spent: 70, Year: 2013},
+            {Name: 'Mr B', Spent: 80, Year: 2013},
+            {Name: 'Mr C', Spent: 10, Year: 2013},
+            {Name: 'Mr D', Spent: 30, Year: 2013},
+            {Name: 'Mr A', Spent: 70, Year: 2014},
+            {Name: 'Mr B', Spent: 80, Year: 2014},
+            {Name: 'Mr C', Spent: 10, Year: 2014},
+            {Name: 'Mr D', Spent: 65, Year: 2014}
+        ];
+
+        // normalize/parse data
+        //        spendData.forEach(function (d) {
+        //            d.Spent = d.Spent.match(/\d+/);
+        //        });
+
+        // set crossfilter
+        var ndx = crossfilter(spendData),
+            yearDim = ndx.dimension(function (d) {
+                return +d.Year;
+            }),
+            spendDim = ndx.dimension(function (d) {
+                return Math.floor(d.Spent / 10);
+            }),
+            nameDim = ndx.dimension(function (d) {
+                return d.Name;
+            }),
+            spendPerYear = yearDim.group().reduceSum(function (d) {
+                return +d.Spent;
+            }),
+            spendPerName = nameDim.group().reduceSum(function (d) {
+                return +d.Spent;
+            }),
+            spendHist = spendDim.group().reduceCount();
+
+        yearRingChart
+            .dimension(yearDim)
+            .group(spendPerYear)
+            .innerRadius(90)
+            .legend(dc.legend().x(135).y(115).itemHeight(13).gap(5))
+            .ordinalColors(["#E064CD", "#F8B700", "#78CC00", "#7B71C5"])
+            .controlsUseVisibility(true);
+
+        spendHistChart
+            .dimension(spendDim)
+            .group(spendHist)
+            .x(d3.scale.linear().domain([0, 10]))
+            .elasticY(true)
+            .colorAccessor(function (d, i) {
+                return d.value;
+            })
+            .controlsUseVisibility(true);
+
+        spendHistChart.xAxis().tickFormat(function (d) {
+            return d * 10
+        }); // convert back to base unit
+        spendHistChart.yAxis().ticks(2);
+
+        spenderRowChart
+            .dimension(nameDim)
+            .group(spendPerName)
+            .elasticX(true)
+            .ordinalColors(["#EE82EE", "#FF6347", "#9ACD32", "#663399"])
+            .controlsUseVisibility(true)
+            .xAxis().ticks(5);
+
+        function show_empty_message(chart) {
+            var is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+            var data = is_empty ? [1] : [];
+            var empty = chart.svg().selectAll('.empty-message').data(data);
+            empty.enter().append('text')
+                .text('NO DATA!')
+                .attr({
+                    'text-anchor': 'middle',
+                    'alignment-baseline': 'middle',
+                    class: 'empty-message',
+                    x: chart.margins().left + chart.effectiveWidth() / 2,
+                    y: chart.margins().top + chart.effectiveHeight() / 2
+                })
+                .style('opacity', 0);
+            empty.transition().duration(1000).style('opacity', 1);
+            empty.exit().remove();
+        }
+
+        spendHistChart.on('pretransition', show_empty_message);
+        spenderRowChart.on('pretransition', show_empty_message);
+
+        dc.renderAll();
+
+    </script>
+
+</div>
+<div style="clear: both; text-align: center">
+    <br>
+    <br>
+    <a id="allChartsReset" href="javascript:dc.filterAll();dc.redrawAll();"
+       style="display: inline-block; width: 100%; text-align: center; text-decoration: none; font-weight: bold">Reset
+        All</a>
+    <!--<input id="allChartsReset" type='button' value="ResetAll" onclick='dc.filterAll();dc.redrawAll();'>-->
+</div>
+
+<div class="container" style="text-align: center">
+    <br>
+    <input type='button' value="Undo" onclick='simprov.undoAction();'>
+    <input type='button' value="Redo" onclick='simprov.redoAction();'>
+    <input type='button' value="ExportProvenanceJson" onclick='simprov.exportProvenance("json");'>
+    <input type='button' value="ExportProvenanceGist" onclick='simprov.exportProvenance("gist");'>
+    <input type='button' value="ImportProvenanceJson" onclick='simprov.importProvenance("json");'>
+    <input type='button' value="ImportProvenanceGist" onclick='simprov.importProvenance("gist");'>
+    <input type='button' value="ConsoleTree" onclick='simprov.printTree();'>
+    <input type='button' value="ClearStorage" onclick='simprov.resetAll();'>
+    <br>
+    <table id="actionTable" cellpadding="5" style="margin-left:auto; margin-right:auto">
+        <tr>
+            <th><b>Replay</b></th>
+        </tr>
+    </table>
+</div>
+<!-- SIMProv Imports-->
+<script src="../simprov.dev.js"></script>
+<script src="js/simprov.hook.js"></script>
+</body>
+</html>

@@ -76,8 +76,8 @@ export default class Tree {
     printTree() {
         return new Promise((resolve) => {
             let tempTree = this.simprovTree.model;
-            console.log('%cSimprov%c:>> %cTree', 'color:#FFD700', 'color:#FF4500', 'color:#bada55');
-            console.log(`%c${treeify.asTree(tempTree, true)}`, 'color:#BADA55');
+            console.log('%cSimprov%c:>> %cTree', 'color:#FF4500', 'color:#FF6347', 'color:#32CD32');
+            console.log(`%c${treeify.asTree(tempTree, true)}`, 'color:#32CD32');
             resolve();
         });
     }

@@ -5,10 +5,10 @@ export default class VendorHooks {
 
     isDCInitialized() {
         if (typeof window.dc === 'undefined') {
-            new Error('%cSimprov%c:>> %cdc.js is not initialized', 'color:#FFD700', 'color:#FF4500', 'color:#bada55');
+            new Error('%cSimprov%c:>> %cdc.js is not initialized', 'color:#FF4500', 'color:#FF6347', 'color:#32CD32');
         } else {
             if (this.verboseVH) {
-                console.log('%cSimprov%c:>> %cdc.js is initialized', 'color:#FFD700', 'color:#FF4500', 'color:#bada55');
+                console.log('%cSimprov%c:>> %cdc.js is initialized', 'color:#FF4500', 'color:#FF6347', 'color:#32CD32');
             }
             return true;
         }

@@ -11161,9 +11161,9 @@
         }
 
         if (typeof define === "function" && define.amd) {
-            define(["d3", "crossfilter"], _dc);
+            define(["public/dc1/js/d3", "crossfilter"], _dc);
         } else if (typeof module === "object" && module.exports) {
-            var _d3 = require('d3');
+            var _d3 = require('public/dc1/js/d3');
             var _crossfilter = require('crossfilter2');
             // When using npm + browserify, 'crossfilter' is a function,
             // since package.json specifies index.js as main function, and it

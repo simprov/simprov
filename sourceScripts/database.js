@@ -36,7 +36,7 @@ export default class Database {
         return Dexie.delete(dbName);
     }
 
-    existsDB(dbName = this.dbName) {
+    static existsDBHelper(dbName) {
         return Dexie.exists(dbName);
     }
 
@@ -52,7 +52,8 @@ export default class Database {
         return new Promise((resolve) => {
             this.db.version(1).stores({
                 provenance: 'actionCUID',
-                cache: '++'
+                cache: '++',
+                stream: '++, timestamp'
             });
             resolve();
         });
@@ -60,6 +61,10 @@ export default class Database {
 
     listAllDB() {
         return Dexie.getDatabaseNames();
+    }
+
+    streamFetcher(startTimestamp, endTimestamp) {
+        return this.db.stream.where('timestamp').between(startTimestamp, endTimestamp, true, true).toArray();
     }
 
     tableCount(storeName = 'provenance') {
