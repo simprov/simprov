@@ -125,6 +125,15 @@ export default class Core {
         });
     }
 
+    async fetchAllStream() {
+        let tempStreamArray = await this.fetchAll('stream');
+        if (tempStreamArray.length) {
+            return tempStreamArray;
+        } else {
+            return null;
+        }
+    }
+
     async exportProvenance(exportType) {
         let tempExportArray = await this.fetchAll();
         let tempCache = await this.getObject(1, 'cache');
@@ -376,6 +385,7 @@ export default class Core {
             await this.updateObject(1, {
                 persistent: this.persistent
             }, 'cache');
+            await this.createCustomEvent(this.persistent, 'simprov.persistent');
             await this.consoleOutput(`Changed persistent mode to ${this.persistent}`, true);
         }
         else {

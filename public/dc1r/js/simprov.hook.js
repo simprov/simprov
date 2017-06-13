@@ -59,6 +59,8 @@ async function initializeSimprov() {
         resetID: '#spenderRowChartReset'
     });
 
+    let persistentTrigger = false;
+
     //----------------------------------------------------------------------------------------------------------------//
 
     function addRow(actionCUID) {
@@ -99,6 +101,16 @@ async function initializeSimprov() {
         }
     });
 
+    await simprov.onEvent('simprov.persistent', async (persistentBoolean) => {
+        let tempStreamArray = await simprov.fetchAllStream();
+        persistentTrigger = true;
+        if (tempStreamArray && persistentBoolean) {
+            streamDataReplacer(tempStreamArray);
+            dc.redrawAll();
+        }
+        persistentTrigger = false;
+    });
+
     //----------------------------------------------------------------------------------------------------------------//
 
     await simprov.initialize();
@@ -116,7 +128,7 @@ async function initializeSimprov() {
         await simprov.addToStream(initialStream);
     }
 
-    function streamDataHarvester(requiredData) {
+    function streamDataFacilitator(requiredData) {
         ndx.remove();
         for (let item of requiredData) {
             ndx.add(item.payload.streamData);
@@ -154,7 +166,7 @@ async function initializeSimprov() {
     function dcStateSower(seed, streamData) {
         dc.filterAll();
         if (streamData) {
-            streamDataHarvester(streamData);
+            streamDataFacilitator(streamData);
         }
         for (let [key, value] of chartMap) {
             let filterValue = seed.find((item) => item.chartID === value.registry.chartID()).data;
@@ -183,7 +195,7 @@ async function initializeSimprov() {
     let globalReset = false;
 
     function helperAddRemoveAction(chart, filter) {
-        if (!globalReset) {
+        if (!globalReset && !persistentTrigger) {
             let actionData = {};
             actionData.chartID = chart.chartID();
             actionData.name = chartMap.get(chart.chartID()).name;
@@ -275,18 +287,22 @@ async function initializeSimprov() {
         }
     }
 
+    function streamDataReplacer(streamData) {
+        let chartYearRing = yearRingChart.filters();
+        let chartSpendHist = spendHistChart.filters();
+        let chartSpenderRow = spenderRowChart.filters();
+        dc.filterAll();
+        streamDataFacilitator(streamData);
+        yearRingChart.filter([chartYearRing]);
+        if (chartSpendHist.length) {
+            spendHistChart.filter(chartSpendHist[0]);
+        }
+        spenderRowChart.filter([chartSpenderRow]);
+    }
+
     function helperAddRemoveActions(actionContent, streamData) {
         if (streamData) {
-            let chartYearRing = yearRingChart.filters();
-            let chartSpendHist = spendHistChart.filters();
-            let chartSpenderRow = spenderRowChart.filters();
-            dc.filterAll();
-            streamDataHarvester(streamData);
-            yearRingChart.filter([chartYearRing]);
-            if (chartSpendHist.length) {
-                spendHistChart.filter(chartSpendHist[0]);
-            }
-            spenderRowChart.filter([chartSpenderRow]);
+            streamDataReplacer(streamData);
         }
         let tempActionData = actionContent.actionData;
         let tempChart = chartMap.get(tempActionData.chartID);
@@ -355,12 +371,14 @@ async function connectToStream() {
     await dataStreamerLink.initialize();
     await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {
         await simprov.addToStream(payloadData);
-        for (let item of payloadData) {
-            ndx.add(item.payload.streamData);
-        }
         ++streamCounter;
-        if (streamCounter % updateInterval === 0) {
-            dc.redrawAll();
+        if (await simprov.persistentMode()) {
+            for (let item of payloadData) {
+                ndx.add(item.payload.streamData);
+            }
+            if (streamCounter % updateInterval === 0) {
+                dc.redrawAll();
+            }
         }
     });
     $('#connectToStream').prop('disabled', true);
