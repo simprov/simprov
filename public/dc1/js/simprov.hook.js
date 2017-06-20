@@ -34,7 +34,7 @@ async function initializeSimprov() {
     simprov = new Simprov(configuration);
 
     // Get chart instances
-    let allDCCharts = simprov.dcRegistry();
+    let allDCCharts = await simprov.dcRegistry();
     let [chart1, chart2, chart3] = allDCCharts;
 
     let chartMap = new Map();
@@ -90,7 +90,7 @@ async function initializeSimprov() {
         }
     });
 
-    await simprov.onEvent('simprov.imported', async (simprovData) => {
+    await simprov.onEvent('simprov.importedProvenance', async (simprovData) => {
         await deleteRows();
         for (let tempObject of simprovData) {
             await addRow(tempObject.actionCUID);
@@ -128,8 +128,6 @@ async function initializeSimprov() {
         }
         return checkPointData;
     }
-
-// console.log(dcCheckPointHarvester());
 
     function dcStateSower(seed) {
         dc.filterAll();

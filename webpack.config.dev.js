@@ -1,6 +1,6 @@
 import webpack from "webpack";
 import path from "path";
-import {version} from "./package.json";
+import {version} from "./package";
 const baseDirectory = __dirname;
 const sourcePath = path.resolve(baseDirectory, 'sourceScripts/index');
 const buildBanner = `SIMProv v${version} Development Build`;

@@ -73,10 +73,11 @@ export default class Tree {
         return Promise.resolve({id: cuid, checkpoint: checkpoint, inverse: inverse, children: []});
     }
 
-    printTree() {
+    printTreeHelper(timestamp) {
         return new Promise((resolve) => {
             let tempTree = this.simprovTree.model;
-            console.log('%cSimprov%c:>> %cTree', 'color:#FF4500', 'color:#FF6347', 'color:#32CD32');
+            let tempConsoleMessage = `%cSimprov%c:%c[${timestamp}]%c>> %cTree`;
+            console.log(tempConsoleMessage, 'color:#FF4500', 'color:#FF6347', 'color:#DAA520', 'color:#FF6347', 'color:#32CD32');
             console.log(`%c${treeify.asTree(tempTree, true)}`, 'color:#32CD32');
             resolve();
         });

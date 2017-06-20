@@ -4,9 +4,8 @@
       "env",
       {
         "targets": {
-          "node": "current"
-        },
-        "loose": false
+          "uglify": true
+        }
       }
     ]
   ],
@@ -17,10 +16,9 @@
           "env",
           {
             "targets": {
-              "node": "current"
+              "uglify": true
             },
-            "modules": false,
-            "loose": false
+            "modules": false
           }
         ]
       ]

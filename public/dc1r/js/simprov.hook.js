@@ -36,7 +36,7 @@ async function initializeSimprov() {
     simprov = new Simprov(configuration);
 
     // Get chart instances
-    let allDCCharts = simprov.dcRegistry();
+    let allDCCharts = await simprov.dcRegistry();
     let [chart1, chart2, chart3] = allDCCharts;
 
     let chartMap = new Map();
@@ -59,7 +59,7 @@ async function initializeSimprov() {
         resetID: '#spenderRowChartReset'
     });
 
-    let persistentTrigger = false;
+    let eventTrigger = false;
 
     //----------------------------------------------------------------------------------------------------------------//
 
@@ -92,23 +92,29 @@ async function initializeSimprov() {
         for (let tempObject of simprovData) {
             await addRow(tempObject.actionCUID);
         }
+        $('#importStreamJson').prop('disabled', true);
+        $('#importStreamGist').prop('disabled', true);
     });
 
-    await simprov.onEvent('simprov.imported', async (simprovData) => {
+    await simprov.onEvent('simprov.importedProvenance', async (simprovData) => {
         await deleteRows();
         for (let tempObject of simprovData) {
             await addRow(tempObject.actionCUID);
         }
+        $('#importStreamJson').prop('disabled', true);
+        $('#importStreamGist').prop('disabled', true);
     });
 
-    await simprov.onEvent('simprov.persistent', async (persistentBoolean) => {
-        let tempStreamArray = await simprov.fetchAllStream();
-        persistentTrigger = true;
-        if (tempStreamArray && persistentBoolean) {
-            streamDataReplacer(tempStreamArray);
+    await simprov.onEvent('simprov.importedStream', (simprovData) => {
+        streamDataReplacer(simprovData);
+        dc.redrawAll();
+    });
+
+    await simprov.onEvent('simprov.persistent', (simprovData) => {
+        if (simprovData.streamData) {
+            streamDataReplacer(simprovData.streamData);
             dc.redrawAll();
         }
-        persistentTrigger = false;
     });
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -195,7 +201,7 @@ async function initializeSimprov() {
     let globalReset = false;
 
     function helperAddRemoveAction(chart, filter) {
-        if (!globalReset && !persistentTrigger) {
+        if (!globalReset && !eventTrigger) {
             let actionData = {};
             actionData.chartID = chart.chartID();
             actionData.name = chartMap.get(chart.chartID()).name;
@@ -288,16 +294,22 @@ async function initializeSimprov() {
     }
 
     function streamDataReplacer(streamData) {
+        eventTrigger = true;
         let chartYearRing = yearRingChart.filters();
         let chartSpendHist = spendHistChart.filters();
         let chartSpenderRow = spenderRowChart.filters();
         dc.filterAll();
         streamDataFacilitator(streamData);
-        yearRingChart.filter([chartYearRing]);
+        if (chartYearRing.length) {
+            yearRingChart.filter([chartYearRing]);
+        }
         if (chartSpendHist.length) {
             spendHistChart.filter(chartSpendHist[0]);
         }
-        spenderRowChart.filter([chartSpenderRow]);
+        if (chartSpenderRow.length) {
+            spenderRowChart.filter([chartSpenderRow]);
+        }
+        eventTrigger = false;
     }
 
     function helperAddRemoveActions(actionContent, streamData) {
@@ -362,12 +374,10 @@ initializeSimprov();
 async function connectToStream() {
     let streamCounter = 0;
     let updateInterval = 4;
-    let configuration = {};
-    configuration.username = await DataStreamerLink.usernameInput();
-    configuration.instanceKey = await DataStreamerLink.instanceKeyInput();
-    configuration.cipherKey = await DataStreamerLink.cipherKeyInput();
-    configuration.instantiationKey = await DataStreamerLink.instantiationKeyKeyInput();
-    dataStreamerLink = new DataStreamerLink(configuration);
+    let dsConfiguration = {};
+    dsConfiguration.username = await simprov.getUserName();
+    dsConfiguration.dsKey = await DataStreamerLink.dsKeyInput();
+    dataStreamerLink = new DataStreamerLink(dsConfiguration);
     await dataStreamerLink.initialize();
     await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {
         await simprov.addToStream(payloadData);
@@ -382,6 +392,8 @@ async function connectToStream() {
         }
     });
     $('#connectToStream').prop('disabled', true);
+    $('#importStreamJson').prop('disabled', true);
+    $('#importStreamGist').prop('disabled', true);
 }
 
 

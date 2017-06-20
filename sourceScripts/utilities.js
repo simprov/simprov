@@ -1,8 +1,27 @@
 import SHA512 from 'sha512-es';
 import swal from 'sweetalert2';
+import toastr from 'toastr';
+import copy from 'copy-to-clipboard';
 
 export default class Utilities {
     constructor() {
+        this.toastrAlertOptions = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
     }
 
     timeStampMaker() {
@@ -33,13 +52,14 @@ export default class Utilities {
     async loadJson(titleText) {
         let inputFile = await swal({
             title: titleText,
-            type: 'question',
+            type: 'info',
             input: 'file',
             showCancelButton: true,
             showCloseButton: true,
             cancelButtonColor: '#d9534f',
             confirmButtonText: 'Import',
             confirmButtonColor: '#5cb85c',
+            allowEscapeKey: false,
             inputAttributes: {
                 accept: 'application/json'
             }
@@ -72,14 +92,14 @@ export default class Utilities {
                 text: 'Update Username and CUID from file?',
                 type: 'question',
                 showCancelButton: true,
-                showCloseButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
                 confirmButtonColor: '#5cb85c',
                 allowOutsideClick: false,
+                allowEscapeKey: false
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
+            if (reason === 'cancel') {
                 decision = false;
             }
         }
@@ -94,14 +114,14 @@ export default class Utilities {
                 text: 'Update records with current Username and CUID?',
                 type: 'question',
                 showCancelButton: true,
-                showCloseButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
                 confirmButtonColor: '#5cb85c',
                 allowOutsideClick: false,
+                allowEscapeKey: false
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
+            if (reason === 'cancel') {
                 decision = false;
             }
         }
@@ -113,13 +133,13 @@ export default class Utilities {
             return new Promise(function (resolve, reject) {
                 if (input) {
                     if (input.length < 32) {
-                        reject('Please enter a valid ID');
+                        reject('Please enter a valid 32 character gist id');
                     }
                     else {
                         resolve();
                     }
                 } else {
-                    reject('Please enter a valid ID');
+                    reject('Please enter a valid 32 character gist id');
                 }
             });
         };
@@ -127,16 +147,18 @@ export default class Utilities {
             title: titleText,
             text: 'Enter Gist ID',
             input: 'text',
-            inputPlaceholder: 'Gist ID',
+            inputPlaceholder: 'id',
             inputAttributes: {
                 maxlength: '32'
             },
-            type: 'question',
+            type: 'info',
             showCancelButton: true,
             showCloseButton: true,
             cancelButtonColor: '#d9534f',
             confirmButtonText: 'Import',
             confirmButtonColor: '#5cb85c',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
             inputValidator: validator
         }).catch(swal.noop);
         if (gistID) {
@@ -151,7 +173,7 @@ export default class Utilities {
     async gistConfirmation(gistInformation, titleText) {
         await swal({
             title: titleText,
-            html: `<a href=${gistInformation[0]} style="text-decoration: none; color:#a5dc86" target="_blank">Explore on GitHub</a>`,
+            html: `<a href=${gistInformation[0]} style="text-decoration: none; color:#a5dc86" target="_blank">Click here to explore on GitHub</a>`,
             input: 'text',
             inputValue: `             ${gistInformation[1]}`,
             inputAttributes: {
@@ -159,9 +181,11 @@ export default class Utilities {
             },
             type: 'success',
             confirmButtonColor: '#5cb85c',
+            confirmButtonText: 'Copy and Close',
             allowOutsideClick: false,
-            showCloseButton: true
+            allowEscapeKey: false
         }).catch(swal.noop);
+        await this.copyID(gistInformation[1]);
     }
 
     async jsonConfirmation(titleText, textText) {
@@ -171,7 +195,9 @@ export default class Utilities {
             type: 'success',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
-            showCloseButton: true
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false
         }).catch(swal.noop);
     }
 
@@ -181,7 +207,9 @@ export default class Utilities {
             text: 'Corrupt provenance imported',
             type: 'error',
             confirmButtonColor: '#d9534f',
-            showCloseButton: true
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false
         }).catch(swal.noop);
     }
 
@@ -192,7 +220,9 @@ export default class Utilities {
             type: 'success',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
-            showCloseButton: true
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false
         }).catch(swal.noop);
     }
 
@@ -203,15 +233,15 @@ export default class Utilities {
                 title: 'Delete Provenance',
                 text: 'Are you sure?',
                 type: 'warning',
-                showCloseButton: true,
                 showCancelButton: true,
                 cancelButtonColor: '#5cb85c',
                 confirmButtonText: 'Delete',
                 confirmButtonColor: '#f0ad4e',
                 allowOutsideClick: false,
+                allowEscapeKey: false
             });
         } catch (reason) {
-            if (reason === 'cancel' || reason === 'esc' || reason === 'close') {
+            if (reason === 'cancel') {
                 decision = false;
             }
         }
@@ -222,7 +252,8 @@ export default class Utilities {
                 type: 'info',
                 timer: 2000,
                 showConfirmButton: false,
-                allowOutsideClick: false
+                allowOutsideClick: false,
+                allowEscapeKey: false
             }).catch(swal.noop);
         }
         return decision;
@@ -251,13 +282,28 @@ export default class Utilities {
             inputAttributes: {
                 maxlength: '16'
             },
-            type: 'question',
+            type: 'info',
             confirmButtonColor: '#5cb85c',
             allowOutsideClick: false,
             allowEscapeKey: false,
             inputValidator: validator
         }).catch(swal.noop);
         return usernameInput;
+    }
+
+   async copyID(gistID){
+       copy(gistID);
+       let timeStamp = await this.timeStampMaker();
+       let tempConsoleMessage = `%cSimprov%c:%c[${timeStamp}]%c>> %cCopied gist id to clipboard`;
+       console.log(tempConsoleMessage, 'color:#FF4500', 'color:#FF6347', 'color:#DAA520', 'color:#FF6347', 'color:#32CD32');
+       await this.toastrAlert('Copied gist id to clipboard', 'info');
+    }
+
+    toastrAlert(toastrMessage, toastrType) {
+        return new Promise((resolve) => {
+            toastr[toastrType](toastrMessage, null, this.toastrAlertOptions);
+            resolve();
+        });
     }
 
     classUtilitiesInformation() {

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="css/favicon-32x32.png" sizes="32x32"/>
     <link rel="stylesheet" type="text/css" href="css/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="css/toastr.min.css">
     <link rel="stylesheet" type="text/css" href="css/dc.css"/>
     <link rel="stylesheet" href="css/modify.css">
 </head>
@@ -167,8 +168,8 @@
     <br>
     <input type='button' value="ExportStreamJson" onclick='simprov.exportStream("json");'>
     <input type='button' value="ExportStreamGist" onclick='simprov.exportStream("gist");'>
-    <input type='button' value="ImportStreamJson" onclick='simprov.importStream("json");'>
-    <input type='button' value="ImportStreamGist" onclick='simprov.importStream("gist");'>
+    <input id="importStreamJson" type='button' value="ImportStreamJson" onclick='simprov.importStream("json");'>
+    <input id="importStreamGist" type='button' value="ImportStreamGist" onclick='simprov.importStream("gist");'>
     <input type='button' value="PersistentMode" onclick='simprov.persistentMode(true);'>
     <input type='button' value="NonPersistentMode" onclick='simprov.persistentMode(false);'>
     <br>
@@ -180,10 +181,6 @@
             <th><b>Replay</b></th>
         </tr>
     </table>
-	<br>
-	<p>Instance Key: cj3vnva1600013f8e4jdmqerv</p>
-    <p>Cipher Key: cj3vnva1400003f8et5zw0xtd</p>
-    <p>Instantiation Key: 14973640057640572</p>
 </div>
 <!-- SIMProv Imports-->
 <script src="js/datastreamerlink.js"></script>
