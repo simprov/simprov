@@ -6,6 +6,7 @@ async function initializeSimprov() {
     let configuration = {
         userInterface: false,
         realtime: true,
+        collaboration: true,
         startTimeFrame: 1497294672108,
         verbose: true,
         thumbnailOptions: {
@@ -25,8 +26,8 @@ async function initializeSimprov() {
         checkpointInterval: 2,
         checkpointGet: dcCheckPointHarvester,
         checkpointSet: dcStateSower,
-        databaseName: 'simprovdc1r',
-        cuid: 'cj3b1idew03356c1bkb3dew1k' // Lock ID for demo
+        databaseName: 'simprovdc1rc1',
+        cuid: 'cj4dkgew900023d61efimnmmv' // Lock ID for demo
     };
     let dbExists = await Simprov.existsDB(configuration.databaseName);
     if (!dbExists) {
@@ -116,6 +117,19 @@ async function initializeSimprov() {
             streamDataReplacer(simprovData.streamData);
             dc.redrawAll();
         }
+    });
+
+    await simprov.onEvent('simprov.syncProvenance', async (simprovData) => {
+        await deleteRows();
+        for (let tempObject of simprovData) {
+            await addRow(tempObject.actionCUID);
+        }
+    });
+
+    await simprov.onEvent('simprov.subscriberSync', (simprovData) => {
+        $('#collaborate').prop('disabled', true);
+        $('#importStreamJson').prop('disabled', true);
+        $('#importStreamGist').prop('disabled', true);
     });
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -378,7 +392,7 @@ async function connectToStream() {
     let dsConfiguration = {};
     dsConfiguration.cuid = await simprov.getUserCUID(); // Lock ID for demo
     dsConfiguration.username = await simprov.getUserName();
-    dsConfiguration.dsKey = await DataStreamerLink.dsKeyInput();
+    dsConfiguration.dsKey = 'cj4foe0ka00013d8epi9apgrfcj4foe0k900003d8ezs0qe7ye14985742045686024';
     dataStreamerLink = new DataStreamerLink(dsConfiguration);
     await dataStreamerLink.initialize();
     await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {

@@ -2,6 +2,8 @@ import SHA512 from 'sha512-es';
 import swal from 'sweetalert2';
 import toastr from 'toastr';
 import copy from 'copy-to-clipboard';
+import jsonSize from 'json-size';
+import {prettySize} from 'pretty-size';
 
 export default class Utilities {
     constructor() {
@@ -15,7 +17,7 @@ export default class Utilities {
             "onclick": null,
             "showDuration": "300",
             "hideDuration": "1000",
-            "timeOut": "5000",
+            "timeOut": "8000",
             "extendedTimeOut": "1000",
             "showEasing": "swing",
             "hideEasing": "linear",
@@ -291,18 +293,153 @@ export default class Utilities {
         return usernameInput;
     }
 
-   async copyID(gistID){
-       copy(gistID);
-       let timeStamp = await this.timeStampMaker();
-       let tempConsoleMessage = `%cSimprov%c:%c[${timeStamp}]%c>> %cCopied gist id to clipboard`;
-       console.log(tempConsoleMessage, 'color:#FF4500', 'color:#FF6347', 'color:#DAA520', 'color:#FF6347', 'color:#32CD32');
-       await this.toastrAlert('Copied gist id to clipboard', 'info');
+    async showSummaryHelper(requiredObject) {
+        let brCounter = 0;
+        let htmlString = '';
+        for (let key in requiredObject) {
+            ++brCounter;
+            if (brCounter % 3 === 0) {
+                htmlString += `<span style="color:#f8bb86">|</span> ${key}: <span style="color:#3fc3ee">${requiredObject[key]}</span> <span style="color:#f8bb86">|</span><br><br>`;
+            }
+            else {
+                htmlString += `<span style="color:#f8bb86">|</span> ${key}: <span style="color:#3fc3ee">${requiredObject[key]}</span> <span style="color:#f8bb86">|</span> `;
+            }
+        }
+        htmlString = ` <div style="color:#a5dc86">${htmlString.trim()}</div>`;
+        await swal({
+            title: 'Action Summary',
+            html: htmlString,
+            type: 'info',
+            confirmButtonColor: '#5cb85c',
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).catch(swal.noop);
+    }
+
+    async generateDecision() {
+        let decision = false;
+        try {
+            decision = await swal({
+                title: 'Collaboration',
+                text: 'Do you want to generate or connect?',
+                type: 'question',
+                showCloseButton: true,
+                showCancelButton: true,
+                cancelButtonColor: '#f0ad4e',
+                cancelButtonText: 'Link',
+                confirmButtonText: 'Make',
+                confirmButtonColor: '#5bc0de',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        } catch (reason) {
+            if (reason === 'cancel') {
+                decision = false;
+            }
+        }
+        return decision;
+    }
+
+    async displayKey(keyInformation) {
+        await swal({
+            title: 'Collaboration Key',
+            text: 'Collaborators use this key to connect',
+            input: 'textarea',
+            inputValue: keyInformation,
+            inputAttributes: {
+                readonly: true
+            },
+            type: 'success',
+            confirmButtonColor: '#5cb85c',
+            confirmButtonText: 'Copy and Close',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).catch(swal.noop);
+        await this.copyID(keyInformation);
+    }
+
+    async collaborationKeyInput() {
+        let validator = (input) => {
+            return new Promise(function (resolve, reject) {
+                if (input) {
+                    if (input.length < 50) {
+                        reject('Please enter a valid 50 characters collaboration key');
+                    }
+                    else {
+                        resolve();
+                    }
+                } else {
+                    reject('Please enter a valid 50 characters collaboration key');
+                }
+            });
+        };
+        let collaborationKeyInput = await swal({
+            title: 'Collaboration Key',
+            text: 'Enter collaboration key',
+            input: 'textarea',
+            inputPlaceholder: 'key',
+            inputAttributes: {
+                maxlength: '67'
+            },
+            type: 'info',
+            showCancelButton: true,
+            showCloseButton: true,
+            cancelButtonColor: '#d9534f',
+            confirmButtonText: 'Attach',
+            confirmButtonColor: '#5cb85c',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            inputValidator: validator
+        }).catch(swal.noop);
+        if (collaborationKeyInput) {
+            return collaborationKeyInput;
+        }
+        else {
+            collaborationKeyInput = null;
+            return collaborationKeyInput;
+        }
+    }
+
+    async provenanceSize(provenanceSize) {
+        await swal({
+            title: 'Provenance Size',
+            text: provenanceSize,
+            type: 'info',
+            timer: 3000,
+            confirmButtonColor: '#5cb85c',
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).catch(swal.noop);
+    }
+
+    async retrieveLocation() {
+        let fetchFrom = 'https://ipinfo.io';
+        let responseData = await $.getJSON(fetchFrom);
+        return (responseData);
+    }
+
+    async copyID(requiredData) {
+        copy(requiredData);
+        let timeStamp = await this.timeStampMaker();
+        let tempConsoleMessage = `%cSimprov%c:%c[${timeStamp}]%c>> %cCopied to clipboard`;
+        console.log(tempConsoleMessage, 'color:#FF4500', 'color:#FF6347', 'color:#DAA520', 'color:#FF6347', 'color:#32CD32');
+        await this.toastrAlert('Copied to clipboard', 'info');
     }
 
     toastrAlert(toastrMessage, toastrType) {
         return new Promise((resolve) => {
             toastr[toastrType](toastrMessage, null, this.toastrAlertOptions);
             resolve();
+        });
+    }
+
+    computeJsonSize(requiredData) {
+        return new Promise((resolve) => {
+            let requiredDataString = JSON.stringify(requiredData);
+            let byteSize = jsonSize(requiredDataString);
+            resolve(prettySize(byteSize, true));
         });
     }
 

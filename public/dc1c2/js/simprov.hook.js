@@ -1,12 +1,11 @@
 let simprov = {};
-let dataStreamerLink = {};
 
 async function initializeSimprov() {
-    // Configure SIMProv
+// Configure SIMProv
     let configuration = {
         userInterface: false,
-        realtime: true,
-        startTimeFrame: 1497294672108,
+        realtime: false,
+        collaboration: true,
         verbose: true,
         thumbnailOptions: {
             cropLeftOffset: 0,
@@ -25,8 +24,8 @@ async function initializeSimprov() {
         checkpointInterval: 2,
         checkpointGet: dcCheckPointHarvester,
         checkpointSet: dcStateSower,
-        databaseName: 'simprovdc1r',
-        cuid: 'cj3b1idew03356c1bkb3dew1k' // Lock ID for demo
+        databaseName: 'simprovdc1c2',
+        cuid: 'cj4ald5b900023d67lmalnl4t' // Lock ID for demo
     };
     let dbExists = await Simprov.existsDB(configuration.databaseName);
     if (!dbExists) {
@@ -60,8 +59,6 @@ async function initializeSimprov() {
         resetID: '#spenderRowChartReset'
     });
 
-    let eventTrigger = false;
-
     //----------------------------------------------------------------------------------------------------------------//
 
     function addRow(actionCUID) {
@@ -93,8 +90,6 @@ async function initializeSimprov() {
         for (let tempObject of simprovData) {
             await addRow(tempObject.actionCUID);
         }
-        $('#importStreamJson').prop('disabled', true);
-        $('#importStreamGist').prop('disabled', true);
     });
 
     await simprov.onEvent('simprov.importedProvenance', async (simprovData) => {
@@ -102,45 +97,22 @@ async function initializeSimprov() {
         for (let tempObject of simprovData) {
             await addRow(tempObject.actionCUID);
         }
-        $('#importStreamJson').prop('disabled', true);
-        $('#importStreamGist').prop('disabled', true);
     });
 
-    await simprov.onEvent('simprov.importedStream', (simprovData) => {
-        streamDataReplacer(simprovData);
-        dc.redrawAll();
-    });
-
-    await simprov.onEvent('simprov.persistent', (simprovData) => {
-        if (simprovData.streamData) {
-            streamDataReplacer(simprovData.streamData);
-            dc.redrawAll();
+    await simprov.onEvent('simprov.syncProvenance', async (simprovData) => {
+        await deleteRows();
+        for (let tempObject of simprovData) {
+            await addRow(tempObject.actionCUID);
         }
+    });
+
+    await simprov.onEvent('simprov.subscriberSync', (simprovData) => {
+        $('#collaborate').prop('disabled', true);
     });
 
     //----------------------------------------------------------------------------------------------------------------//
 
     await simprov.initialize();
-
-    if (!dbExists) {
-        let initialStream = [{
-            timestamp: configuration.startTimeFrame,
-            payload: {
-                streamData: [{Name: 'Mr A', Spent: 10, Year: 2011},
-                    {Name: 'Mr B', Spent: 20, Year: 2011},
-                    {Name: 'Mr C', Spent: 30, Year: 2011},
-                    {Name: 'Mr D', Spent: 10, Year: 2011}]
-            }
-        }];
-        await simprov.addToStream(initialStream);
-    }
-
-    function streamDataFacilitator(requiredData) {
-        ndx.remove();
-        for (let item of requiredData) {
-            ndx.add(item.payload.streamData);
-        }
-    }
 
     function dcCheckPointHarvester() {
         let checkPointData = [];
@@ -170,11 +142,8 @@ async function initializeSimprov() {
         return checkPointData;
     }
 
-    function dcStateSower(seed, streamData) {
+    function dcStateSower(seed) {
         dc.filterAll();
-        if (streamData) {
-            streamDataFacilitator(streamData);
-        }
         for (let [key, value] of chartMap) {
             let filterValue = seed.find((item) => item.chartID === value.registry.chartID()).data;
             if (value.type === 'clickChart') {
@@ -202,7 +171,7 @@ async function initializeSimprov() {
     let globalReset = false;
 
     function helperAddRemoveAction(chart, filter) {
-        if (!globalReset && !eventTrigger) {
+        if (!globalReset) {
             let actionData = {};
             actionData.chartID = chart.chartID();
             actionData.name = chartMap.get(chart.chartID()).name;
@@ -256,7 +225,7 @@ async function initializeSimprov() {
         });
     }
 
-    function actionAdd(seed, actionContent, isState, streamData) {
+    function actionAdd(seed, actionContent, isState) {
         if (isState) {
             for (let item of seed) {
                 if (item.chartID === actionContent.actionData.chartID) {
@@ -271,11 +240,11 @@ async function initializeSimprov() {
             return seed;
         }
         else {
-            helperAddRemoveActions(actionContent, streamData);
+            helperAddRemoveActions(actionContent);
         }
     }
 
-    function actionRemove(seed, actionContent, isState, streamData) {
+    function actionRemove(seed, actionContent, isState) {
         if (isState) {
             for (let item of seed) {
                 if (item.chartID === actionContent.actionData.chartID) {
@@ -290,33 +259,11 @@ async function initializeSimprov() {
             return seed;
         }
         else {
-            helperAddRemoveActions(actionContent, streamData);
+            helperAddRemoveActions(actionContent);
         }
     }
 
-    function streamDataReplacer(streamData) {
-        eventTrigger = true;
-        let chartYearRing = yearRingChart.filters();
-        let chartSpendHist = spendHistChart.filters();
-        let chartSpenderRow = spenderRowChart.filters();
-        dc.filterAll();
-        streamDataFacilitator(streamData);
-        if (chartYearRing.length) {
-            yearRingChart.filter([chartYearRing]);
-        }
-        if (chartSpendHist.length) {
-            spendHistChart.filter(chartSpendHist[0]);
-        }
-        if (chartSpenderRow.length) {
-            spenderRowChart.filter([chartSpenderRow]);
-        }
-        eventTrigger = false;
-    }
-
-    function helperAddRemoveActions(actionContent, streamData) {
-        if (streamData) {
-            streamDataReplacer(streamData);
-        }
+    function helperAddRemoveActions(actionContent) {
         let tempActionData = actionContent.actionData;
         let tempChart = chartMap.get(tempActionData.chartID);
         tempChart.registry.filter(tempActionData.inverseData);
@@ -371,33 +318,4 @@ async function initializeSimprov() {
 }
 
 initializeSimprov();
-
-async function connectToStream() {
-    let streamCounter = 0;
-    let updateInterval = 4;
-    let dsConfiguration = {};
-    dsConfiguration.cuid = await simprov.getUserCUID(); // Lock ID for demo
-    dsConfiguration.username = await simprov.getUserName();
-    dsConfiguration.dsKey = await DataStreamerLink.dsKeyInput();
-    dataStreamerLink = new DataStreamerLink(dsConfiguration);
-    await dataStreamerLink.initialize();
-    await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {
-        await simprov.addToStream(payloadData);
-        ++streamCounter;
-        if (await simprov.persistentMode()) {
-            for (let item of payloadData) {
-                ndx.add(item.payload.streamData);
-            }
-            if (streamCounter % updateInterval === 0) {
-                dc.redrawAll();
-            }
-        }
-    });
-    $('#connectToStream').prop('disabled', true);
-    $('#importStreamJson').prop('disabled', true);
-    $('#importStreamGist').prop('disabled', true);
-}
-
-
-
 

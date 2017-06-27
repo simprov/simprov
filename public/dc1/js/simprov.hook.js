@@ -3,27 +3,28 @@ let simprov = {};
 async function initializeSimprov() {
 // Configure SIMProv
     let configuration = {
-        'userInterface': false,
-        'realtime': false,
-        'verbose': true,
-        'thumbnailOptions': {
+        userInterface: false,
+        realtime: false,
+        collaboration: false,
+        verbose: true,
+        thumbnailOptions: {
             cropLeftOffset: 0,
             cropTopOffset: 0,
             thumbnailWidth: 900,
             thumbnailHeight: 340,
-            captureTimeout: 1000
+            captureTimeout: 1
         },
-        'actions': {
-            'Add': actionAdd,
-            'Remove': actionRemove,
-            'Brush': actionBrush,
-            'Reset': actionReset,
-            'GlobalReset': actionGlobalReset
+        actions: {
+            Add: actionAdd,
+            Remove: actionRemove,
+            Brush: actionBrush,
+            Reset: actionReset,
+            GlobalReset: actionGlobalReset
         },
-        'checkpointInterval': 2,
-        'checkpointGet': dcCheckPointHarvester,
-        'checkpointSet': dcStateSower,
-        'databaseName': 'simprov'
+        checkpointInterval: 2,
+        checkpointGet: dcCheckPointHarvester,
+        checkpointSet: dcStateSower,
+        databaseName: 'simprovdc1'
     };
     let dbExists = await Simprov.existsDB(configuration.databaseName);
     if (!dbExists) {

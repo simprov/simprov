@@ -1,9 +1,9 @@
-import rasterizeHTML from './rasterizeHTML.allinone'; //TODO remember to update file, when new version from npm
+import rasterizeHTML from './rasterizeHTML.allinone'; //TODO remember to update file, when new version available from npm
 
 export default class Thumbnail {
     constructor() {
         this.requiredWidth = 300;
-        this.requiredHeight = 250;
+        this.requiredHeight = 300;
         this.allInFrame = true;
         this.plainCSSString = '';
     }
