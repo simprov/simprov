@@ -425,7 +425,7 @@ async function connectToStream() {
     let dsConfiguration = {};
     dsConfiguration.cuid = await simprov.getUserCUID(); // Lock ID for demo
     dsConfiguration.username = await simprov.getUserName();
-    dsConfiguration.dsKey = await DataStreamerLink.dsKeyInput();
+    dsConfiguration.dsKey = 'cj4y86wgk00013d8f0olixsc8cj4y86wgj00003d8fy4xz8xfk14996958543160032';
     dataStreamerLink = new DataStreamerLink(dsConfiguration);
     await dataStreamerLink.initialize();
     await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {
