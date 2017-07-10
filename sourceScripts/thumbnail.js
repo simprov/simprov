@@ -1,9 +1,10 @@
 import rasterizeHTML from './rasterizeHTML.allinone'; //TODO remember to update file, when new version available from npm
 
 export default class Thumbnail {
-    constructor() {
+    constructor(configuration) {
+        this.userInterfaceT = configuration;
         this.requiredWidth = 300;
-        this.requiredHeight = 300;
+        this.requiredHeight = 285;
         this.allInFrame = true;
         this.plainCSSString = '';
     }
@@ -65,13 +66,21 @@ export default class Thumbnail {
         let documentBody = documentClone.body;
         // console.log(documentBody);
         let allBodyScripts = documentBody.getElementsByTagName('script');
-        // console.log(allBodyScripts);
+        // console.log(allBodyScripts.length);
         let aBSLength = allBodyScripts.length;
         while (aBSLength--) {
             allBodyScripts[aBSLength].parentNode.removeChild(allBodyScripts[aBSLength]);
         }
+        if (this.userInterfaceT) {
+            let simprovUIDiv = documentClone.getElementById('simprovUserInterface');
+            simprovUIDiv.remove();
+        }
+        if (documentClone.getElementById('toast-container')) {
+            let toastContainerDiv = documentClone.getElementById('toast-container');
+            toastContainerDiv.remove();
+        }
         // console.log(documentBody);
-        if (this.plainCSSString === '') {
+        if (!this.plainCSSString.length) {
             this.plainCSSString = await this.cssCollector();
         }
         // console.log(plainCSSString);
@@ -104,7 +113,7 @@ export default class Thumbnail {
         resizedThumbnailCanvas.width = this.requiredWidth;
         resizedThumbnailCanvas.height = this.requiredHeight;
         let resizedThumbnailCanvasContext = resizedThumbnailCanvas.getContext('2d');
-        resizedThumbnailCanvasContext.fillStyle = 'WhiteSmoke' ;
+        resizedThumbnailCanvasContext.fillStyle = 'WhiteSmoke';
         resizedThumbnailCanvasContext.fillRect(0, 0, this.requiredWidth, this.requiredHeight);
         resizedThumbnailCanvasContext.drawImage(thumbnailCanvas, dimensions.left, dimensions.top, dimensions.width, dimensions.height);
         return resizedThumbnailCanvas.toDataURL();

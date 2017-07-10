@@ -3,17 +3,25 @@
 <head>
     <title>dc1c1</title>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="css/favicon-32x32.png" sizes="32x32"/>
-    <link rel="stylesheet" type="text/css" href="css/sweetalert2.min.css">
-    <link rel="stylesheet" type="text/css" href="css/toastr.min.css">
-    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+    <link rel="stylesheet" href="css/sweetalert2.min.css">
+    <link rel="stylesheet" href="css/toastr.min.css">
+    <link rel="stylesheet" href="css/dc.css"/>
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
+    <link rel="stylesheet" href="css/simprov.ui.css">
+    <link rel="stylesheet" href="css/Treant.css">
     <link rel="stylesheet" href="css/modify.css">
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/raphael.js"></script>
+    <script src="js/perfect-scrollbar.jquery.min.js"></script>
 </head>
 <body>
 
-<!--<div class="container">-->
 <div>
-    <!--<script type="text/javascript" src="js/header.js"></script>-->
+
     <div id="chart-ring-year" style="width:300px; height:300px">
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
             <a id="yearRingChartReset" href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
@@ -33,11 +41,9 @@
         </div>
     </div>
 
-
     <script type="text/javascript" src="js/d3.js"></script>
     <script type="text/javascript" src="js/crossfilter.js"></script>
     <script type="text/javascript" src="js/dc.js"></script>
-    <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript">
 
         var yearRingChart = dc.pieChart("#chart-ring-year"),
@@ -151,32 +157,9 @@
     <a id="allChartsReset" href="javascript:dc.filterAll();dc.redrawAll();"
        style="display: inline-block; width: 100%; text-align: center; text-decoration: none; font-weight: bold">Reset
         All</a>
-    <!--<input id="allChartsReset" type='button' value="ResetAll" onclick='dc.filterAll();dc.redrawAll();'>-->
 </div>
 
-<div class="container" style="text-align: center">
-    <br>
-    <input type='button' value="Undo" onclick='simprov.undoAction();'>
-    <input type='button' value="Redo" onclick='simprov.redoAction();'>
-    <input type='button' value="ExportProvenanceJson" onclick='simprov.exportProvenance("json");'>
-    <input type='button' value="ExportProvenanceGist" onclick='simprov.exportProvenance("gist");'>
-    <input type='button' value="ImportProvenanceJson" onclick='simprov.importProvenance("json");'>
-    <input type='button' value="ImportProvenanceGist" onclick='simprov.importProvenance("gist");'>
-    <input type='button' value="ActionSummary" onclick='simprov.showSummary();'>
-    <input type='button' value="ProvenanceSize" onclick='simprov.showProvenanceSize();'>
-    <input type='button' value="ConsoleTree" onclick='simprov.printTree();'>
-    <input type='button' value="ClearStorage" onclick='simprov.resetAll();'>
-    <br>
-    <br>
-    <input id="collaborate" type='button' value="Collaborate" onclick='simprov.collaborate();'>
-    <input type='button' value="CollaborationKey" onclick='simprov.displayCollaborationKey();'>
-    <br>
-    <table id="actionTable" cellpadding="5" style="margin-left:auto; margin-right:auto">
-        <tr>
-            <th><b>Replay</b></th>
-        </tr>
-    </table>
-</div>
+<div id="noUIContainer" class="container" style="text-align: center"></div>
 <!-- SIMProv Imports-->
 <script src="../simprov.dev.js"></script>
 <script src="js/simprov.hook.js"></script>

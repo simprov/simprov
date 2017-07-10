@@ -30,7 +30,8 @@ module.exports = {
         contentBase: contentBase,
         port: 3000,
         stats: "minimal",
-        open: false,
+        open: true,
+        openPage: '',
         clientLogLevel: "none",
         overlay: {
             warnings: true,

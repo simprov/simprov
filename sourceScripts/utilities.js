@@ -56,6 +56,9 @@ export default class Utilities {
             title: titleText,
             type: 'info',
             input: 'file',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
+            cancelButtonClass: 'sweet-alert-cancel-font',
             showCancelButton: true,
             showCloseButton: true,
             cancelButtonColor: '#d9534f',
@@ -93,6 +96,9 @@ export default class Utilities {
                 title: 'Import Provenance',
                 text: 'Update Username and CUID from file?',
                 type: 'question',
+                customClass: 'sweet-alert-font',
+                confirmButtonClass: 'sweet-alert-confirm-font',
+                cancelButtonClass: 'sweet-alert-cancel-font',
                 showCancelButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
@@ -115,6 +121,9 @@ export default class Utilities {
                 title: 'Import Provenance',
                 text: 'Update records with current Username and CUID?',
                 type: 'question',
+                customClass: 'sweet-alert-font',
+                confirmButtonClass: 'sweet-alert-confirm-font',
+                cancelButtonClass: 'sweet-alert-cancel-font',
                 showCancelButton: true,
                 cancelButtonColor: '#d9534f',
                 confirmButtonText: 'Update',
@@ -154,6 +163,9 @@ export default class Utilities {
                 maxlength: '32'
             },
             type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
+            cancelButtonClass: 'sweet-alert-cancel-font',
             showCancelButton: true,
             showCloseButton: true,
             cancelButtonColor: '#d9534f',
@@ -182,6 +194,8 @@ export default class Utilities {
                 readonly: true
             },
             type: 'success',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             confirmButtonColor: '#5cb85c',
             confirmButtonText: 'Copy and Close',
             allowOutsideClick: false,
@@ -195,6 +209,8 @@ export default class Utilities {
             title: titleText,
             text: textText,
             type: 'success',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
             showCloseButton: true,
@@ -208,6 +224,8 @@ export default class Utilities {
             title: 'Import Error',
             text: 'Corrupt provenance imported',
             type: 'error',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             confirmButtonColor: '#d9534f',
             showCloseButton: true,
             allowOutsideClick: false,
@@ -218,8 +236,10 @@ export default class Utilities {
     async importConfirmation(recordCount) {
         await swal({
             title: 'Import Successful',
-            text: `${recordCount} records imported`,
+            text: `${recordCount} record(s) imported`,
             type: 'success',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
             showCloseButton: true,
@@ -232,9 +252,12 @@ export default class Utilities {
         let decision = false;
         try {
             decision = await swal({
-                title: 'Delete Provenance',
+                title: 'Delete Data',
                 text: 'Are you sure?',
                 type: 'warning',
+                customClass: 'sweet-alert-font',
+                confirmButtonClass: 'sweet-alert-confirm-font',
+                cancelButtonClass: 'sweet-alert-cancel-font',
                 showCancelButton: true,
                 cancelButtonColor: '#5cb85c',
                 confirmButtonText: 'Delete',
@@ -252,6 +275,7 @@ export default class Utilities {
                 title: 'Deletion Successful',
                 text: 'Will reinitialize in a moment',
                 type: 'info',
+                customClass: 'sweet-alert-font',
                 timer: 2000,
                 showConfirmButton: false,
                 allowOutsideClick: false,
@@ -285,6 +309,8 @@ export default class Utilities {
                 maxlength: '16'
             },
             type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             confirmButtonColor: '#5cb85c',
             allowOutsideClick: false,
             allowEscapeKey: false,
@@ -310,6 +336,8 @@ export default class Utilities {
             title: 'Action Summary',
             html: htmlString,
             type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             confirmButtonColor: '#5cb85c',
             showCloseButton: true,
             allowOutsideClick: false,
@@ -324,6 +352,9 @@ export default class Utilities {
                 title: 'Collaboration',
                 text: 'Do you want to generate or connect?',
                 type: 'question',
+                customClass: 'sweet-alert-font',
+                confirmButtonClass: 'sweet-alert-confirm-font',
+                cancelButtonClass: 'sweet-alert-cancel-font',
                 showCloseButton: true,
                 showCancelButton: true,
                 cancelButtonColor: '#f0ad4e',
@@ -351,6 +382,8 @@ export default class Utilities {
                 readonly: true
             },
             type: 'success',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             confirmButtonColor: '#5cb85c',
             confirmButtonText: 'Copy and Close',
             allowOutsideClick: false,
@@ -383,6 +416,9 @@ export default class Utilities {
                 maxlength: '67'
             },
             type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
+            cancelButtonClass: 'sweet-alert-cancel-font',
             showCancelButton: true,
             showCloseButton: true,
             cancelButtonColor: '#d9534f',
@@ -401,11 +437,50 @@ export default class Utilities {
         }
     }
 
-    async provenanceSize(provenanceSize) {
-        await swal({
-            title: 'Provenance Size',
-            text: provenanceSize,
+    async annotationInput(requiredData) {
+        let annotationInput = await swal({
+            title: 'Annotate',
+            text: requiredData.actionData.information,
+            input: 'textarea',
+            inputPlaceholder: 'annotation',
+            inputValue: requiredData.annotation,
+            inputAttributes: {
+                maxlength: '100'
+            },
             type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
+            cancelButtonClass: 'sweet-alert-cancel-font',
+            showCancelButton: true,
+            showCloseButton: true,
+            cancelButtonColor: '#d9534f',
+            confirmButtonText: 'Annotate',
+            confirmButtonColor: '#5cb85c',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).catch(swal.noop);
+        if (annotationInput) {
+            return annotationInput;
+        }
+        else {
+            if (annotationInput !== undefined && !annotationInput.length) {
+                annotationInput = '';
+                return annotationInput;
+            }
+            else {
+                annotationInput = requiredData.annotation;
+                return annotationInput;
+            }
+        }
+    }
+
+    async showSize(fileSize, titleText) {
+        await swal({
+            title: titleText,
+            text: fileSize,
+            type: 'info',
+            customClass: 'sweet-alert-font',
+            confirmButtonClass: 'sweet-alert-confirm-font',
             timer: 3000,
             confirmButtonColor: '#5cb85c',
             showCloseButton: true,

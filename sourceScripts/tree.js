@@ -69,8 +69,15 @@ export default class Tree {
         this.currentNode = tempNode;
     }
 
-    nodeMaker(cuid, checkpoint, inverse) {
-        return Promise.resolve({id: cuid, checkpoint: checkpoint, inverse: inverse, children: []});
+    nodeMaker(cuid, checkpoint, inverse, actionData, nodeColor) {
+        return Promise.resolve({
+            id: cuid,
+            checkpoint: checkpoint,
+            inverse: inverse,
+            innerHTML: `<p class='node-name' title='${actionData.information}'>${actionData.type}<br>( ${cuid.substr(cuid.length - 8, 8)} )</p>`,
+            HTMLid: `${cuid}-${nodeColor.replace('#','')}-tree`,
+            children: []
+        });
     }
 
     printTreeHelper(timestamp) {

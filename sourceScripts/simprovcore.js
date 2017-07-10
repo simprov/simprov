@@ -4,14 +4,20 @@ import Utilities from './utilities';
 import Backup from './backup';
 import Tree from './tree';
 import Thumbnail from './thumbnail';
+import UserInterface from './userinterface';
 import {mixin} from 'es6-mixin';
 import cuid from 'cuid';
 import sortKeys from 'sort-keys';
 import PubNub from 'pubnub';
+import randomColor from 'random-color';
+import moment from 'moment';
+import './Treant';
 
 export default class Core {
     constructor(configuration) {
         this.userName = configuration.username || 'SIMProvUser';
+        this.userInterface = configuration.uiNeeded || false;
+        this.selectedUIElementID = '';
         this.verboseC = configuration.verbose || false;
         this.realtime = configuration.realtime || false;
         this.collaboration = configuration.collaboration || false;
@@ -28,6 +34,7 @@ export default class Core {
         this.replayTrigger = false;
         this.redoSequence = [];
         this.actionSummary = this.summaryObjectMaker(configuration.actions);
+        this.treeNodeColor = randomColor().hexString();
         this.ifSynchronized = false;
         this.slaveInstance = false;
         this.masterInstance = false;
@@ -63,12 +70,19 @@ export default class Core {
             presenceTimeout: this.presenceTimeout,
             heartbeatInterval: this.heartbeatInterval
         });
+        this.isUITreeInitialized = false;
+        this.shouldUITreeUpdate = false;
+        this.uiTree = {};
+        this.shouldAPanelUpdate = false;
+        this.isGalleryOpen = false;
+        this.isAPanelOpen = false;
         mixin(this, Database, this.databaseName);
         mixin(this, VendorHooks, this.verboseSC);
         mixin(this, Utilities);
         mixin(this, Backup);
         mixin(this, Tree);
-        mixin(this, Thumbnail);
+        mixin(this, Thumbnail, this.userInterface);
+        mixin(this, UserInterface);
     }
 
     async actionReplay(actionCUID, internalOperation = false, userInfo = this.userName) {
@@ -82,13 +96,18 @@ export default class Core {
         }
         else if (actionCUID !== tempCurrentNodeID) {
             await this.actionReplayHelper(actionCUID, internalOperation, true, userInfo);
+            if (this.userInterface) {
+                this.shouldUITreeUpdate = true;
+                this.shouldAPanelUpdate = true;
+                await this.updateUISelections(actionCUID);
+            }
             if (this.ifSynchronized && !this.ifControlled) {
                 await this.publishHandler({type: 'replay', data: actionCUID}, 'control', false);
             }
         }
         else {
-            await this.consoleOutput('Nothing to replay');
-            await this.toastrAlert('Nothing to replay', 'warning');
+            await this.consoleOutput('Already in the required state');
+            await this.toastrAlert('Already in the required state', 'warning');
         }
         this.replayTrigger = false;
     }
@@ -136,7 +155,7 @@ export default class Core {
                 hasCheckpoint = this.checkpointCounter % this.checkpointInterval === 0;
             }
             let tempObject = await this.objectWrapper(provenanceData, hasCheckpoint);
-            let tempNode = await this.nodeMaker(tempObject.actionCUID, hasCheckpoint, isInvertible);
+            let tempNode = await this.nodeMaker(tempObject.actionCUID, hasCheckpoint, isInvertible, tempObject.actionData, this.treeNodeColor);
             let nodeToAdd = await this.getCurrentNodeID();
             await this.addNode(tempNode);
             await this.updateObject(1, {
@@ -160,6 +179,9 @@ export default class Core {
                 }, 'provenance');
                 await this.consoleOutput('Provenance published');
                 await this.toastrAlert('Provenance published', 'success');
+            }
+            if (this.userInterface) {
+                await this.updateUI(tempDataObject);
             }
         }
     }
@@ -248,16 +270,21 @@ export default class Core {
                 if (userCredentialDecision) {
                     this.userName = cachedInformation.username;
                     this.userCUID = cachedInformation.userCUID;
+                    this.treeNodeColor = cachedInformation.treeNodeColor;
                 }
                 else {
                     cachedInformation.username = this.userName;
                     cachedInformation.userCUID = this.userCUID;
                     let modifyRecordsDecision = await this.modifyRecordsDecision();
                     if (modifyRecordsDecision) {
+                        this.treeNodeColor = cachedInformation.treeNodeColor;
                         for (let tempObject of tempArray) {
                             tempObject.username = this.userName;
                             tempObject.userCUID = this.userCUID;
                         }
+                    }
+                    else {
+                        cachedInformation.treeNodeColor = this.treeNodeColor;
                     }
                 }
                 this.checkpointCounter = cachedInformation.checkpointCounter;
@@ -273,7 +300,31 @@ export default class Core {
                 await this.toastrAlert(`Imported from ${importType}`, 'success');
                 await this.consoleOutput(`${addCount} record(s) added to provenance database`);
                 await this.importConfirmation(addCount);
-                await this.createCustomEvent(await this.fetchAll(), 'simprov.importedProvenance');
+                let tempDataArray = await this.fetchAll();
+                if (this.userInterface) {
+                    if (this.realtime) {
+                        if (this.persistent) {
+                            if ($('#simprovPersistenceFalseIcon').hasClass('simprov-active-icon-selection')) {
+                                $('#simprovPersistenceFalseIcon').removeClass('simprov-active-icon-selection');
+                                $('#simprovPersistenceTrueIcon').addClass('simprov-active-icon-selection');
+                            }
+                        }
+                        else if (!this.persistent) {
+                            if ($('#simprovPersistenceTrueIcon').hasClass('simprov-active-icon-selection')) {
+                                $('#simprovPersistenceTrueIcon').removeClass('simprov-active-icon-selection');
+                                $('#simprovPersistenceFalseIcon').addClass('simprov-active-icon-selection');
+                            }
+                        }
+                        await this.disableStreamImportUIButtons();
+                    }
+                    $('#simprovThumbnailContent').empty();
+                    $('#simprovTableContent').empty();
+                    for (let tempObject of tempDataArray) {
+                        await this.updateUI(tempObject, false);
+                    }
+                    await this.updateUISelections(tempCurrentNodeID, false);
+                }
+                await this.createCustomEvent(tempDataArray, 'simprov.importedProvenance');
                 await this.delayActionReplay(tempCurrentNodeID, true, 0);
             }
             else {
@@ -318,6 +369,9 @@ export default class Core {
     }
 
     async initialize() {
+        if (this.userInterface) {
+            await this.initializeUI();
+        }
         let dbExists = await Simprov.existsDB(this.databaseName);
         if (dbExists) {
             await this.initializeDB();
@@ -330,15 +384,30 @@ export default class Core {
             await this.addTree(tempSimprovTree, tempCurrentNodeID);
             this.persistent = cachedInformation.persistent;
             this.actionSummary = cachedInformation.actionSummary;
+            this.treeNodeColor = cachedInformation.treeNodeColor;
             await this.consoleOutput('Loaded from database');
             await this.toastrAlert('Loaded from database', 'success');
-            await this.createCustomEvent(await this.fetchAll(), 'simprov.reloaded');
+            let tempDataArray = await this.fetchAll();
+            if (this.userInterface) {
+                if (this.realtime) {
+                    if (!this.persistent) {
+                        $('#simprovPersistenceTrueIcon').removeClass('simprov-active-icon-selection');
+                        $('#simprovPersistenceFalseIcon').addClass('simprov-active-icon-selection');
+                    }
+                    await this.disableStreamImportUIButtons();
+                }
+                for (let tempObject of tempDataArray) {
+                    await this.updateUI(tempObject, false);
+                }
+                await this.updateUISelections(tempCurrentNodeID, false);
+            }
+            await this.createCustomEvent(tempDataArray, 'simprov.reloaded');
             await this.delayActionReplay(tempCurrentNodeID, true);
         }
         else {
-            let tempProvenanceData = {type: 'Initial'};
+            let tempProvenanceData = {type: 'Initial', information: 'Initial state'};
             let tempObject = await this.objectWrapper(tempProvenanceData, true);
-            let tempNode = await this.nodeMaker(tempObject.actionCUID, true, false);
+            let tempNode = await this.nodeMaker(tempObject.actionCUID, true, false, tempObject.actionData, this.treeNodeColor);
             await this.addRoot(tempNode);
             let tempCache = {
                 username: this.userName,
@@ -347,13 +416,18 @@ export default class Core {
                 tree: await this.getTree(),
                 currentNodeID: await this.getCurrentNodeID(),
                 persistent: this.persistent,
-                actionSummary: this.actionSummary
+                actionSummary: this.actionSummary,
+                treeNodeColor: this.treeNodeColor
             };
             await this.initializeDB();
             await this.putData(tempCache, 'cache', 1);
             let dbCUID = await this.addData(tempObject);
             await this.createThumbnail(dbCUID);
-            await this.createCustomEvent(await this.getObject(tempObject.actionCUID), 'simprov.added');
+            let tempDataObject = await this.getObject(dbCUID);
+            if (this.userInterface) {
+                await this.updateUI(tempDataObject);
+            }
+            await this.createCustomEvent(tempDataObject, 'simprov.added');
             await this.consoleOutput('Initialized');
             await this.toastrAlert('Initialized', 'success');
         }
@@ -367,6 +441,40 @@ export default class Core {
                 resolve();
             }, this.thumbnailOptions.captureTimeout * 1000);
         });
+    }
+
+    async addAnnotation(requiredID) {
+        let tempDataObject = await this.getObject(requiredID);
+        let currentAnnotation = tempDataObject.annotation;
+        let updatedAnnotation = await this.annotationInput(tempDataObject);
+        if (currentAnnotation !== updatedAnnotation) {
+            await this.updateObject(requiredID, {annotation: updatedAnnotation});
+            if (this.userInterface) {
+                this.shouldAPanelUpdate = true;
+            }
+            if (this.ifSynchronized) {
+                await this.publishHandler({
+                    type: 'annotation',
+                    data: updatedAnnotation, addToID: requiredID
+                }, 'control', false);
+                await this.consoleOutput('Annotation published');
+                await this.toastrAlert('Annotation published', 'success');
+            }
+            if (!currentAnnotation.length) {
+                await this.consoleOutput(`Annotation [${updatedAnnotation}] added`);
+                await this.toastrAlert('Annotated', 'info');
+            }
+            else {
+                await this.consoleOutput(`Annotation updated from [${currentAnnotation}] to [${updatedAnnotation}]`);
+                await this.toastrAlert('Annotation updated', 'info');
+            }
+        }
+    }
+
+    async updateAnnotation(requiredID, annotationData, userInfo) {
+        await this.updateObject(requiredID, {annotation: annotationData});
+        await this.consoleOutput(`Added annotation [${annotationData}]`, true, userInfo);
+        await this.toastrAlert('Annotated', 'info');
     }
 
     localStorageSet(storageData, toWhere) {
@@ -401,6 +509,7 @@ export default class Core {
             }
             wrappedObject.annotation = '';
             wrappedObject.actionData = provenanceData;
+            wrappedObject.treeNodeColor = this.treeNodeColor;
             resolve(wrappedObject);
         });
     }
@@ -432,6 +541,9 @@ export default class Core {
             this.redoSequence.unshift(tempCurrentID);
             await this.consoleOutput('Undid', true, userInfo);
             await this.toastrAlert('Undone', 'success');
+            if (this.userInterface) {
+                await this.updateUISelections(tempCurrentNode.parent.model.id, true, true);
+            }
             if (this.ifSynchronized && !this.ifControlled) {
                 await this.publishHandler({type: 'undo', data: null}, 'control', false);
             }
@@ -459,6 +571,20 @@ export default class Core {
                 }, 'simprov.persistent');
                 await this.consoleOutput(`Changed persistent mode to ${this.persistent}`, true);
                 await this.toastrAlert(`Changed persistent mode to ${this.persistent}`, 'info');
+                if (this.userInterface) {
+                    if (this.persistent) {
+                        if ($('#simprovPersistenceFalseIcon').hasClass('simprov-active-icon-selection')) {
+                            $('#simprovPersistenceFalseIcon').removeClass('simprov-active-icon-selection');
+                            $('#simprovPersistenceTrueIcon').addClass('simprov-active-icon-selection');
+                        }
+                    }
+                    else if (!this.persistent) {
+                        if ($('#simprovPersistenceTrueIcon').hasClass('simprov-active-icon-selection')) {
+                            $('#simprovPersistenceTrueIcon').removeClass('simprov-active-icon-selection');
+                            $('#simprovPersistenceFalseIcon').addClass('simprov-active-icon-selection');
+                        }
+                    }
+                }
             }
             else {
                 await this.consoleOutput(`Already in persistent mode ${this.persistent}`);
@@ -477,6 +603,9 @@ export default class Core {
             await this.replayHelper(tempNodeID);
             await this.consoleOutput('Redid', true, userInfo);
             await this.toastrAlert('Redone', 'success');
+            if (this.userInterface) {
+                await this.updateUISelections(tempNodeID, true, true);
+            }
             if (this.ifSynchronized && !this.ifControlled) {
                 await this.publishHandler({type: 'redo', data: null}, 'control', false);
             }
@@ -611,7 +740,14 @@ export default class Core {
         tempExportArray.push({fileIntegrity: await this.hashComputor(tempExportArray)});
         let jsonSize = await this.computeJsonSize(tempExportArray);
         await this.consoleOutput(`Provenance size ${jsonSize}`);
-        await this.provenanceSize(jsonSize);
+        await this.showSize(jsonSize, 'Provenance Size');
+    }
+
+    async showStreamSize() {
+        let tempExportArray = await this.fetchAll('stream');
+        let jsonSize = await this.computeJsonSize(tempExportArray);
+        await this.consoleOutput(`Stream size ${jsonSize}`);
+        await this.showSize(jsonSize, 'Stream Size');
     }
 
     initializeCollaboration() {
@@ -639,6 +775,10 @@ export default class Core {
             await this.streamControlHandler();
             this.collaborationKey = this.instanceKey + this.cipherKey;
             await this.consoleOutput(`Collaboration Key ${this.collaborationKey}`);
+            if (this.userInterface) {
+                $('#simprovCollaborate').off('click');
+                $('#simprovCollaborate').addClass('simprov-disabled');
+            }
             await this.displayKey(this.collaborationKey);
         }
         else {
@@ -786,11 +926,30 @@ export default class Core {
                     this.ifControlled = true;
                     if (controlString === 'undo') {
                         await this.undoAction(messageUsername);
+                        if (this.userInterface && this.isGalleryOpen) {
+                            $('#simprovOverlayCloseIcon').click();
+                            $('#simprovOverlay').click();
+                        }
                     } else if (controlString === 'redo') {
                         await this.redoAction(messageUsername);
+                        if (this.userInterface && this.isGalleryOpen) {
+                            $('#simprovOverlayCloseIcon').click();
+                            $('#simprovOverlay').click();
+                        }
                     }
                     else if (controlString === 'replay') {
                         await this.actionReplay(messagePayload.data, false, messageUsername);
+                        if (this.userInterface && this.isGalleryOpen) {
+                            $('#simprovOverlayCloseIcon').click();
+                            $('#simprovOverlay').click();
+                        }
+                    }
+                    else if (controlString === 'annotation') {
+                        await this.updateAnnotation(messagePayload.addToID, messagePayload.data, messageUsername);
+                        if (this.userInterface && this.isAPanelOpen) {
+                            $('#simprovAnnotationOverlayCloseIcon').click();
+                            $('#simprovAnnotationPanel').click();
+                        }
                     }
                     this.ifControlled = false;
                 }
@@ -799,6 +958,10 @@ export default class Core {
                     await this.consoleOutput(`Received provenance from ${messageUsername}, published ${await this.timeStampMaker(publishTime)}`);
                     await this.toastrAlert(`Received from ${messageUsername}`, 'info');
                     await this.addProvenance(messagePayload, messageUsername);
+                    if (this.userInterface && this.isGalleryOpen) {
+                        $('#simprovOverlayCloseIcon').click();
+                        $('#simprovOverlay').click();
+                    }
                 }
             },
             status: async (s) => {
@@ -866,6 +1029,7 @@ export default class Core {
         this.actionSummary = cachedInformation.actionSummary;
         cachedInformation.username = this.userName;
         cachedInformation.userCUID = this.userCUID;
+        cachedInformation.treeNodeColor = this.treeNodeColor;
         this.checkpointCounter = cachedInformation.checkpointCounter;
         let tempSimprovTree = cachedInformation.tree;
         let tempCurrentNodeID = cachedInformation.currentNodeID;
@@ -904,7 +1068,32 @@ export default class Core {
         let addCount = await this.tableCount();
         await this.consoleOutput(`${addCount} record(s) added to provenance database`);
         await this.importConfirmation(addCount);
-        await this.createCustomEvent(await this.fetchAll(), 'simprov.syncProvenance');
+        let tempDataArray = await this.fetchAll();
+        if (this.userInterface) {
+            if (this.realtime) {
+                if (this.persistent) {
+                    if ($('#simprovPersistenceFalseIcon').hasClass('simprov-active-icon-selection')) {
+                        $('#simprovPersistenceFalseIcon').removeClass('simprov-active-icon-selection');
+                        $('#simprovPersistenceTrueIcon').addClass('simprov-active-icon-selection');
+                    }
+                }
+                else if (!this.persistent) {
+                    if ($('#simprovPersistenceTrueIcon').hasClass('simprov-active-icon-selection')) {
+                        $('#simprovPersistenceTrueIcon').removeClass('simprov-active-icon-selection');
+                        $('#simprovPersistenceFalseIcon').addClass('simprov-active-icon-selection');
+                    }
+                }
+            }
+            $('#simprovThumbnailContent').empty();
+            $('#simprovTableContent').empty();
+            for (let tempObject of tempDataArray) {
+                await this.updateUI(tempObject, false);
+            }
+            await this.updateUISelections(tempCurrentNodeID, false);
+            $('#simprovCollaborate').off('click');
+            $('#simprovCollaborate').addClass('simprov-disabled');
+        }
+        await this.createCustomEvent(tempDataArray, 'simprov.syncProvenance');
         await this.delayActionReplay(tempCurrentNodeID, true, 0);
         await this.publishHandler(null, 'syncack', false);
         await this.createCustomEvent({instanceType: 'slave', userInfo: userInfo}, 'simprov.subscriberSync');
@@ -927,6 +1116,9 @@ export default class Core {
         this.redoSequence = [];
         await this.consoleOutput('Provenance added', true, userInfo);
         await this.toastrAlert('Provenance added', 'success');
+        if (this.userInterface) {
+            await this.updateUI(requiredData.provenanceData);
+        }
         this.replayTrigger = true;
         let actionSequence = await this.actionSequencer(await this.getCurrentNodeID());
         if (Array.isArray(actionSequence)) {
@@ -1003,14 +1195,528 @@ export default class Core {
                     this.stream.stop();
                     this.streamControl.unsubscribeAll();
                     this.streamControl.stop();
-                    await this.consoleOutput('Disconnected from network');
-                    await this.toastrAlert('Disconnected from network', 'error');
+                    await this.consoleOutput('Disconnected from collaboration network');
+                    await this.toastrAlert('Disconnected from collaboration network', 'error');
                 }
             }
         });
         this.streamControl.subscribe({
             channels: [this.dataChannelControl]
         });
+    }
+
+    async initializeUI() {
+        await this.addUserInterface();
+        $('#simprovThumbnail').click((event) => {
+            event.preventDefault();
+            if ($('#simprovImportExportIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+                $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovRealtimeIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovCollaborationIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+            }
+            $('.simprov-thumbnail-scroll-content').fadeToggle();
+            $('#simprovThumbnailIcon').toggleClass('simprov-active-icon-selection');
+            let thumbnailPosition = $(`#${this.selectedUIElementID}-thumbnailDiv`).position();
+            $('#simprovThumbnailContent').animate({scrollLeft: thumbnailPosition.left}, 1000);
+            $('#simprovThumbnailContent').perfectScrollbar('update');
+        });
+        $('#simprovUndo').click(async (event) => {
+            event.preventDefault();
+            await this.undoAction();
+        });
+        $('#simprovRedo').click(async (event) => {
+            event.preventDefault();
+            await this.redoAction();
+        });
+        $('#simprovOverlay').click(async (event) => {
+            event.preventDefault();
+            if ($('#simprovThumbnailIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-thumbnail-scroll-content').fadeToggle();
+                $('#simprovThumbnailIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovImportExportIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+                $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovRealtimeIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovCollaborationIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+            }
+            $('#simprovUserInterface').fadeToggle(0);
+            $('.simprov-overlay').fadeToggle(0);
+            $('#simprovOverlayIcon').toggleClass('simprov-active-icon-selection');
+            await this.showUITree();
+            await this.updateUITreeSelection();
+            let rowPosition = $(`#${this.selectedUIElementID}-tableTR`).position();
+            $('#simprovTable').animate({scrollTop: rowPosition.top}, 1000);
+            $('#simprovTable').perfectScrollbar('update');
+            this.isGalleryOpen = true;
+        });
+        $('#simprovOverlayCloseIcon').click((event) => {
+            event.preventDefault();
+            $('.simprov-overlay').fadeToggle(0);
+            $('#simprovOverlayIcon').toggleClass('simprov-active-icon-selection');
+            $('#simprovUserInterface').fadeToggle(0);
+            this.isGalleryOpen = false;
+        });
+        $('#simprovImportExport').click((event) => {
+            event.preventDefault();
+            if ($('#simprovThumbnailIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-thumbnail-scroll-content').fadeToggle();
+                $('#simprovThumbnailIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovRealtimeIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+            }
+            if ($('#simprovCollaborationIcon').hasClass('simprov-active-icon-selection')) {
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+            }
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+        });
+        $('#simprovImportJson').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.importProvenance('json');
+        });
+        $('#simprovImportGist').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.importProvenance('gist');
+        });
+        $('#simprovProvenanceSize').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.showProvenanceSize();
+        });
+        $('#simprovSummary').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.showSummary();
+        });
+        $('#simprovExportJson').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.exportProvenance('json');
+        });
+        $('#simprovExportGist').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.exportProvenance('gist');
+        });
+        $('#simprovAnnotationPanel').click(async () => {
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle(0);
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            $('#simprovUserInterface').fadeToggle(0);
+            $('.simprov-annotation-overlay').fadeToggle(0);
+            await this.showAnnotationPanel();
+            this.isAPanelOpen = true;
+        });
+        $('#simprovAnnotationOverlayCloseIcon').click(() => {
+            $('.simprov-annotation-overlay').fadeToggle(0);
+            $('#simprovUserInterface').fadeToggle(0);
+            this.isAPanelOpen = false;
+        });
+        $('#simprovDeleteData').click(async (event) => {
+            event.preventDefault();
+            $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+            $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+            await this.resetAll();
+        });
+        if (this.realtime) {
+            $('#simprovRealtime').click((event) => {
+                event.preventDefault();
+                if ($('#simprovThumbnailIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-thumbnail-scroll-content').fadeToggle();
+                    $('#simprovThumbnailIcon').toggleClass('simprov-active-icon-selection');
+                }
+                if ($('#simprovImportExportIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+                    $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+                }
+                if ($('#simprovCollaborationIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                    $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+                }
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+            });
+            $('#simprovPersistenceTrueIcon').addClass('simprov-active-icon-selection');
+            $('#simprovImportStreamJson').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                await this.importStream('json');
+            });
+            $('#simprovImportStreamGist').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                await this.importStream('gist');
+            });
+            $('#simprovStreamSize').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                await this.showStreamSize();
+            });
+            $('#simprovPersistenceTrue').click(async (event) => {
+                event.preventDefault();
+                await this.persistentMode(true);
+            });
+            $('#simprovPersistenceFalse').click(async (event) => {
+                event.preventDefault();
+                await this.persistentMode(false);
+            });
+            $('#simprovExportStreamJson').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                await this.exportStream('json');
+            });
+            $('#simprovExportStreamGist').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                await this.exportStream('gist');
+            });
+        }
+        else {
+            $('#simprovRealtime').addClass('simprov-disabled');
+        }
+        if (this.collaboration) {
+            $('#simprovCollaboration').click((event) => {
+                event.preventDefault();
+                if ($('#simprovThumbnailIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-thumbnail-scroll-content').fadeToggle();
+                    $('#simprovThumbnailIcon').toggleClass('simprov-active-icon-selection');
+                }
+                if ($('#simprovImportExportIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-vertical-bar-submenu-import-export').fadeToggle();
+                    $('#simprovImportExportIcon').toggleClass('simprov-active-icon-selection');
+                }
+                if ($('#simprovRealtimeIcon').hasClass('simprov-active-icon-selection')) {
+                    $('.simprov-vertical-bar-submenu-realtime').fadeToggle();
+                    $('#simprovRealtimeIcon').toggleClass('simprov-active-icon-selection');
+                }
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+            });
+            $('#simprovCollaborate').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+                await this.collaborate();
+            });
+            $('#simprovCollaborationKey').click(async (event) => {
+                event.preventDefault();
+                $('.simprov-vertical-bar-submenu-collaboration').fadeToggle();
+                $('#simprovCollaborationIcon').toggleClass('simprov-active-icon-selection');
+                await this.displayCollaborationKey();
+            });
+        }
+        else {
+            $('#simprovCollaboration').addClass('simprov-disabled');
+        }
+        $(document).tooltip({
+            items: '[data-simprovTimestamp], [title]',
+            content: function () {
+                let element = $(this);
+                if (element.is('[data-simprovTimestamp]')) {
+                    let titleText = element.attr('title');
+                    let titleTimestamp = element.attr('data-simprovTimestamp');
+                    titleText = `Created ${moment(parseInt(titleTimestamp, 10)).fromNow()} ${titleText}`;
+                    return titleText;
+                }
+                else if (element.is('[title]')) {
+                    return element.attr('title');
+                }
+            },
+            track: true
+        });
+
+        $('.simprov-overlay-table-container').perfectScrollbar({suppressScrollX: true});
+        $('.simprov-thumbnail-scroll-content').perfectScrollbar();
+        $('.simprov-overlay-tree-container').perfectScrollbar();
+        $('.simprov-annotation-overlay-table-container').perfectScrollbar();
+    }
+
+    updateUI(requiredData, shouldUpdate = true) {
+        return new Promise((resolve) => {
+            let thumbnailDivID = `${requiredData.actionCUID}-thumbnailDiv`;
+            let thumbnailLinkID = `${requiredData.actionCUID}-thumbnailLink`;
+            let thumbnailAnnotateID = `${requiredData.actionCUID}-thumbnailAnnotate`;
+            let thumbnailDivContent = `<div id="${thumbnailDivID}" class="simprov-thumbnail-scroll-content-thumbnail"><a id="${thumbnailLinkID}" href="#" title="by ${requiredData.username}<br>${requiredData.actionData.information}<br>( ${requiredData.actionCUID.substr(requiredData.actionCUID.length - 8, 8)} )" data-simprovTimestamp="${requiredData.timeStamp}"><img src="${requiredData.thumbnail}"></a><a id="${thumbnailAnnotateID}" class="simprov-thumbnail-scroll-content-thumbnail-annotation" href="#" title="Annotate"><i class="fa fa-commenting"></i></a></div>`;
+            $('#simprovThumbnailContent').append(thumbnailDivContent);
+            $(`#${thumbnailLinkID}`).click(async (event) => {
+                event.preventDefault();
+                let requiredID = (event.currentTarget.id).split('-')[0];
+                await this.actionReplay(requiredID, false);
+            });
+            $(`#${thumbnailAnnotateID}`).click(async (event) => {
+                event.preventDefault();
+                let requiredID = (event.currentTarget.id).split('-')[0];
+                await this.addAnnotation(requiredID);
+            });
+
+            let tableTRID = `${requiredData.actionCUID}-tableTR`;
+            let tableLinkID = `${requiredData.actionCUID}-tableLink`;
+            let tableAnnotateID = `${requiredData.actionCUID}-tableAnnotate`;
+            let tableLocateID = `${requiredData.actionCUID}-tableLocate`;
+            let tableTRContent = `<tr id="${tableTRID}"><td><a id="${tableLinkID}" class="simprov-table-link" href="#"><img class="simprov-table-image" src="${requiredData.thumbnail}"></a></td>
+                    <td><span class="simprov-captured-span">${requiredData.actionCUID.substr(requiredData.actionCUID.length - 8, 8)}</span></td>
+                    <td>At<br><span class="simprov-captured-span">${moment(requiredData.timeStamp).format('MMMM-DD-YYYY')}</span><br>On<br><span class="simprov-captured-span">${moment(requiredData.timeStamp).format('HH:mm:ss')}</span><br>By<br><span class="simprov-captured-span">${requiredData.username}</span></td>
+                    <td><a id="${tableAnnotateID}" class="simprov-table-icons" href="#" title="Annotate"><i class="fa fa-commenting"></i></a><a id="${tableLocateID}" class="simprov-table-icons" href="#" title="Locate on tree"><i class="fa fa-map-marker"></i></a></td></tr>`;
+            $('#simprovTableContent').append(tableTRContent);
+
+            $(`#${tableLinkID}`).click(async (event) => {
+                event.preventDefault();
+                let requiredID = (event.currentTarget.id).split('-')[0];
+                let previousNode = this.selectedUIElementID;
+                await this.actionReplay(requiredID, false);
+                if (this.shouldUITreeUpdate) {
+                    await this.updateUITreeSelection(previousNode);
+                    this.shouldUITreeUpdate = false;
+                }
+            });
+            $(`#${tableAnnotateID}`).click(async (event) => {
+                event.preventDefault();
+                let requiredID = (event.currentTarget.id).split('-')[0];
+                await this.addAnnotation(requiredID);
+            });
+            $(`#${tableLocateID}`).click(async (event) => {
+                event.preventDefault();
+                let requiredID = (event.currentTarget.id).split('-')[0];
+                await this.locateUIOnTree(requiredID);
+            });
+
+            if (shouldUpdate) {
+                if (this.selectedUIElementID.length) {
+                    $(`#${this.selectedUIElementID}-thumbnailDiv`).css({'border-color': '', 'box-shadow': ''});
+                    $(`#${this.selectedUIElementID}-tableLink`).css({'border-color': '', 'box-shadow': ''});
+                    $(`#${this.selectedUIElementID}-tableTR`).css('background-color', '');
+                    $(`#${this.selectedUIElementID}-tableTR`).removeClass('simprov-row-selection');
+                }
+                $(`#${thumbnailDivID}`).css({
+                    'border-color': 'rgb(255, 153, 102)',
+                    'box-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.70)'
+                });
+                $(`#${tableLinkID}`).css({
+                    'border-color': 'rgb(255, 153, 102)',
+                    'box-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.70)'
+                });
+                $(`#${tableTRID}`).css('background-color', 'rgba(255, 153, 102, 0.1)');
+                $(`#${tableTRID}`).addClass('simprov-row-selection');
+                this.selectedUIElementID = requiredData.actionCUID;
+                let thumbnailPosition = $(`#${thumbnailDivID}`).position();
+                $('#simprovThumbnailContent').animate({scrollLeft: thumbnailPosition.left}, 1000);
+                $('#simprovThumbnailContent').perfectScrollbar('update');
+            }
+            resolve();
+        });
+    }
+
+    updateUISelections(requiredID, shouldUpdate = true, shouldScroll = false) {
+        return new Promise((resolve) => {
+            if (shouldUpdate) {
+                $(`#${this.selectedUIElementID}-thumbnailDiv`).css({'border-color': '', 'box-shadow': ''});
+                $(`#${this.selectedUIElementID}-tableLink`).css({'border-color': '', 'box-shadow': ''});
+                $(`#${this.selectedUIElementID}-tableTR`).css('background-color', '');
+                $(`#${this.selectedUIElementID}-tableTR`).removeClass('simprov-row-selection');
+            }
+            $(`#${requiredID}-thumbnailDiv`).css({
+                'border-color': 'rgb(255, 153, 102)',
+                'box-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.70)'
+            });
+            $(`#${requiredID}-tableLink`).css({
+                'border-color': 'rgb(255, 153, 102)',
+                'box-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.70)'
+            });
+            $(`#${requiredID}-tableTR`).css('background-color', 'rgba(255, 153, 102, 0.1)');
+            $(`#${requiredID}-tableTR`).addClass('simprov-row-selection');
+            this.selectedUIElementID = requiredID;
+            if (shouldScroll) {
+                let thumbnailPosition = $(`#${requiredID}-thumbnailDiv`).position();
+                $('#simprovThumbnailContent').animate({scrollLeft: thumbnailPosition.left}, 1000);
+                $('#simprovThumbnailContent').perfectScrollbar('update');
+            }
+            resolve();
+        });
+    }
+
+    async locateUIOnTree(requiredID) {
+        let tempObject = await this.getObject(requiredID);
+        let nodeColor = tempObject.treeNodeColor;
+        let uiTreeNodeID = `#${requiredID}-${nodeColor.replace('#', '')}-tree`;
+        let nodePositionLeft = $(uiTreeNodeID).css('left').replace(/[^0-9]/g, '');
+        let nodePositionTop = $(uiTreeNodeID).css('top').replace(/[^0-9]/g, '');
+        $('#simprovTree').animate({scrollLeft: nodePositionLeft - 20, scrollTop: nodePositionTop - 20}, 1000);
+        $('#simprovTree').perfectScrollbar('update');
+        $(uiTreeNodeID).css({
+            'border-color': '#9ACD32',
+            'box-shadow': '0 0 1px 0 rgba(255, 204, 51, 0.70)'
+        });
+        setTimeout(() => {
+            if (requiredID === this.selectedUIElementID) {
+                $(uiTreeNodeID).css({
+                    'border-color': 'rgb(255, 153, 102)',
+                    'box-shadow': '0 0 1px rgba(255, 153, 102, 0.70)'
+                });
+            }
+            else {
+                $(uiTreeNodeID).css({'border-color': nodeColor, 'box-shadow': ''});
+            }
+        }, 4000);
+    }
+
+    onAfterPositionNode(treeNode) {
+        let requiredArray = (treeNode.nodeHTMLid).split('-');
+        let nodeColor = `#${requiredArray[1]}`;
+        $(`#${treeNode.nodeHTMLid}`).css({'border-color': nodeColor});
+        $(`#${treeNode.nodeHTMLid}`).click((event) => {
+            event.preventDefault();
+            let nodeID = (event.currentTarget.id).split('-')[0];
+            let rowPosition = $(`#${nodeID}-tableTR`).position();
+            $('#simprovTable').animate({scrollTop: rowPosition.top}, 1000);
+            $('#simprovTable').perfectScrollbar('update');
+            $(`#${nodeID}-tableLink`).css({
+                'border-color': '#9ACD32',
+                'box-shadow': '0 0 1px 0 rgba(255, 204, 51, 0.70)'
+            });
+            $(`#${nodeID}-tableTR`).css('background-color', 'rgba(154, 205, 50, 0.2)');
+            setTimeout(() => {
+                if ($(`#${nodeID}-tableTR`).hasClass('simprov-row-selection')) {
+                    $(`#${nodeID}-tableLink`).css({
+                        'border-color': 'rgb(255, 153, 102)',
+                        'box-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.70)'
+                    });
+                    $(`#${nodeID}-tableTR`).css('background-color', 'rgba(255, 153, 102, 0.1)');
+                }
+                else {
+                    $(`#${nodeID}-tableLink`).css({'border-color': '', 'box-shadow': ''});
+                    $(`#${nodeID}-tableTR`).css('background-color', '');
+                }
+            }, 4000);
+        });
+    }
+
+    async showUITree() {
+        let treeStructure = await this.getTree();
+        let uiTreeConfiguration = {
+            chart: {
+                container: '#simprovTree',
+                callback: {
+                    onAfterPositionNode: this.onAfterPositionNode
+                },
+                connectors: {
+                    type: "step",
+                    style: {
+                        'stroke': '#FFA500',
+                        'arrow-end': 'oval-wide-long',
+                        "stroke-width": 2
+                    }
+                },
+            },
+            nodeStructure: treeStructure
+        };
+        if (!this.isUITreeInitialized) {
+            this.uiTree = new Treant(uiTreeConfiguration, null, $);
+            this.isUITreeInitialized = true;
+        } else {
+            this.uiTree.destroy();
+            this.uiTree = new Treant(uiTreeConfiguration, null, $);
+        }
+    }
+
+    async updateUITreeSelection(previousNode) {
+        if (previousNode !== undefined) {
+            let auxObject = await this.getObject(previousNode);
+            let auxNodeColor = auxObject.treeNodeColor;
+            let auxUITreeNodeID = `#${previousNode}-${auxNodeColor.replace('#', '')}-tree`;
+            $(auxUITreeNodeID).css({'border-color': auxNodeColor, 'box-shadow': ''});
+        }
+        let tempObject = await this.getObject(this.selectedUIElementID);
+        let nodeColor = tempObject.treeNodeColor;
+        let uiTreeNodeID = `#${this.selectedUIElementID}-${nodeColor.replace('#', '')}-tree`;
+        $(uiTreeNodeID).css({
+            'border-color': 'rgb(255, 153, 102)',
+            'box-shadow': '0 0 1px rgba(255, 153, 102, 0.70)'
+        });
+        let nodePositionLeft = $(uiTreeNodeID).css('left').replace(/[^0-9]/g, '');
+        let nodePositionTop = $(uiTreeNodeID).css('top').replace(/[^0-9]/g, '');
+        $('#simprovTree').animate({scrollLeft: nodePositionLeft - 20, scrollTop: nodePositionTop - 20}, 1000);
+        $('#simprovTree').perfectScrollbar('update');
+    }
+
+    async showAnnotationPanel() {
+        let tempArray = await this.fetchAll();
+        let allAnnotations = [];
+        for (let tempObject of tempArray) {
+            if (tempObject.annotation.length) {
+                let annotationObject = {};
+                annotationObject.annotation = tempObject.annotation;
+                annotationObject.actionCUID = tempObject.actionCUID;
+                allAnnotations.push(annotationObject);
+            }
+        }
+        $('#simprovAnnotationTableContent').empty();
+        if (allAnnotations.length) {
+            for (let tempObject of allAnnotations) {
+                let tableTRID = `${tempObject.actionCUID}-aTableTR`;
+                let tableLinkID = `${tempObject.actionCUID}-aTableLink`;
+                let tableAnnotateID = `${tempObject.actionCUID}-aTableAnnotate`;
+                let tableTRContent = `<tr id="${tableTRID}"><td><a id="${tableLinkID}" class="simprov-annotation-captured-span" href="#" title="${tempObject.annotation}">${tempObject.actionCUID.substr(tempObject.actionCUID.length - 8, 8)}</a></td>
+                    <td><a id="${tableAnnotateID}" class="simprov-annotation-table-icons" href="#" title="Annotate"><i class="fa fa-commenting"></i></a></td></tr>`;
+                $('#simprovAnnotationTableContent').append(tableTRContent);
+                $(`#${tableLinkID}`).click(async (event) => {
+                    event.preventDefault();
+                    let requiredID = (event.currentTarget.id).split('-')[0];
+                    await this.actionReplay(requiredID, false);
+                    if (this.shouldAPanelUpdate) {
+                        await this.showAnnotationPanel();
+                    }
+                });
+                $(`#${tableAnnotateID}`).click(async (event) => {
+                    event.preventDefault();
+                    let requiredID = (event.currentTarget.id).split('-')[0];
+                    await this.addAnnotation(requiredID);
+                    if (this.shouldAPanelUpdate) {
+                        await this.showAnnotationPanel();
+                    }
+                });
+            }
+            let containsCheck = allAnnotations.find((item) => item.actionCUID === this.selectedUIElementID);
+            if (containsCheck) {
+                $(`#${this.selectedUIElementID}-aTableLink`).css({
+                    'color': 'rgb(255, 153, 102)',
+                    'text-shadow': '0 0 1px 0 rgba(255, 153, 102, 0.20)'
+                });
+                $(`#${this.selectedUIElementID}-aTableTR`).css('background-color', 'rgba(255, 153, 102, 0.1)');
+                let rowPosition = $(`#${this.selectedUIElementID}-aTableTR`).position();
+                $('#simprovAnnotationTable').animate({scrollTop: rowPosition.top}, 1000);
+                $('#simprovAnnotationTable').perfectScrollbar('update');
+            }
+            this.shouldAPanelUpdate = false;
+        }
     }
 
     static async usernameInput() {

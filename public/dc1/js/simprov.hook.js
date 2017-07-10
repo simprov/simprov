@@ -2,8 +2,8 @@ let simprov = {};
 
 async function initializeSimprov() {
 // Configure SIMProv
-    let configuration = {
-        userInterface: false,
+   let configuration = {
+        uiNeeded: true,
         realtime: false,
         collaboration: false,
         verbose: true,
@@ -26,6 +26,35 @@ async function initializeSimprov() {
         checkpointSet: dcStateSower,
         databaseName: 'simprovdc1'
     };
+
+    //----------------------------------------------------------------------------------------------------------------//
+
+    if (!configuration.uiNeeded) {
+        let noUIContainerContent = `<br>
+    <input type='button' value="Undo" onclick='simprov.undoAction();'>
+    <input type='button' value="Redo" onclick='simprov.redoAction();'>
+    <input type='button' value="ExportProvenanceJson" onclick='simprov.exportProvenance("json");'>
+    <input type='button' value="ExportProvenanceGist" onclick='simprov.exportProvenance("gist");'>
+    <input type='button' value="ImportProvenanceJson" onclick='simprov.importProvenance("json");'>
+    <input type='button' value="ImportProvenanceGist" onclick='simprov.importProvenance("gist");'>
+    <input type='button' value="ActionSummary" onclick='simprov.showSummary();'>
+    <input type='button' value="ProvenanceSize" onclick='simprov.showProvenanceSize();'>
+    <input type='button' value="ConsoleTree" onclick='simprov.printTree();'>
+    <input type='button' value="ClearStorage" onclick='simprov.resetAll();'>
+    <br>
+    <table id="actionTable" cellpadding="5" style="margin-left:auto; margin-right:auto">
+        <tr>
+            <th><b>Replay</b></th>
+        </tr>
+    </table>`;
+        $('#noUIContainer').append(noUIContainerContent);
+    }
+    else {
+        $('#noUIContainer').remove();
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+
     let dbExists = await Simprov.existsDB(configuration.databaseName);
     if (!dbExists) {
         configuration.username = await Simprov.usernameInput();
@@ -60,43 +89,45 @@ async function initializeSimprov() {
 
     //----------------------------------------------------------------------------------------------------------------//
 
-    function addRow(actionCUID) {
-        return new Promise((resolve) => {
-            let table = document.getElementById("actionTable");
-            let rowCount = table.rows.length;
-            let row = table.insertRow(rowCount);
-            row.insertCell(0).innerHTML = `<input type='button' id='${actionCUID}' value ='${actionCUID}' onClick='simprov.actionReplay(this.id)'>`;
-            resolve();
-        });
-    }
+    if (!configuration.uiNeeded) {
+        function addRow(actionCUID, actionType) {
+            return new Promise((resolve) => {
+                let table = document.getElementById("actionTable");
+                let rowCount = table.rows.length;
+                let row = table.insertRow(rowCount);
+                row.insertCell(0).innerHTML = `<input type='button' id='${actionCUID}-AuxReplay' value ='${actionType} ( ${actionCUID.substr(actionCUID.length - 8, 8)} )' onClick='simprov.actionReplay((this.id).split("-")[0])'>&nbsp;<input type='button' id='${actionCUID}-AuxAnnotate' value ='Annotate' onClick='simprov.addAnnotation((this.id).split("-")[0])'>`;
+                resolve();
+            });
+        }
 
-    function deleteRows() {
-        return new Promise((resolve) => {
-            let table = document.getElementById("actionTable");
-            let rowCount = table.rows.length;
-            for (let i = rowCount - 1; i > 0; i--) {
-                table.deleteRow(i);
+        function deleteRows() {
+            return new Promise((resolve) => {
+                let table = document.getElementById("actionTable");
+                let rowCount = table.rows.length;
+                for (let i = rowCount - 1; i > 0; i--) {
+                    table.deleteRow(i);
+                }
+                resolve();
+            });
+        }
+
+        await simprov.onEvent('simprov.added', async (simprovData) => {
+            await addRow(simprovData.actionCUID, simprovData.actionData.type);
+        });
+
+        await simprov.onEvent('simprov.reloaded', async (simprovData) => {
+            for (let tempObject of simprovData) {
+                await addRow(tempObject.actionCUID, tempObject.actionData.type);
             }
-            resolve();
+        });
+
+        await simprov.onEvent('simprov.importedProvenance', async (simprovData) => {
+            await deleteRows();
+            for (let tempObject of simprovData) {
+                await addRow(tempObject.actionCUID, tempObject.actionData.type);
+            }
         });
     }
-
-    await simprov.onEvent('simprov.added', async (simprovData) => {
-        await addRow(simprovData.actionCUID);
-    });
-
-    await simprov.onEvent('simprov.reloaded', async (simprovData) => {
-        for (let tempObject of simprovData) {
-            await addRow(tempObject.actionCUID);
-        }
-    });
-
-    await simprov.onEvent('simprov.importedProvenance', async (simprovData) => {
-        await deleteRows();
-        for (let tempObject of simprovData) {
-            await addRow(tempObject.actionCUID);
-        }
-    });
 
     //----------------------------------------------------------------------------------------------------------------//
 
@@ -169,14 +200,17 @@ async function initializeSimprov() {
                 if (chart.hasFilter(filter)) {
                     actionData.type = 'Add';
                     actionData.inverseAction = 'Remove';
+                    actionData.information = `Added filter ( ${filter} ) on ${actionData.name}`;
                 }
                 else {
                     actionData.type = 'Remove';
                     actionData.inverseAction = 'Add';
+                    actionData.information = `Removed filter ( ${filter} ) on ${actionData.name}`;
                 }
             }
             else {
                 actionData.type = 'Reset';
+                actionData.information = `Cleared all filters on ${actionData.name}`;
                 resetTrigger = false;
             }
             simprov.acquire(actionData);
@@ -191,10 +225,12 @@ async function initializeSimprov() {
             if (!reset) {
                 actionData.forwardData = [chart.filters()[0][0], chart.filters()[0][1]];
                 actionData.type = 'Brush';
+                actionData.information = `Brushed range ( ${chart.filters()[0][0].toFixed(2)} - ${chart.filters()[0][1].toFixed(2)} ) on ${actionData.name}`;
             }
             else {
                 actionData.forwardData = null;
                 actionData.type = 'Reset';
+                actionData.information = `Cleared brushed range on ${actionData.name}`;
             }
             actionData.inverseData = null;
             simprov.acquire(actionData);
@@ -207,6 +243,7 @@ async function initializeSimprov() {
         actionData.forwardData = null;
         actionData.inverseData = null;
         actionData.type = 'GlobalReset';
+        actionData.information = 'Cleared all filters on all charts';
         setTimeout(() => {
             simprov.acquire(actionData);
             globalReset = false;
