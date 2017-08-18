@@ -364,19 +364,25 @@ async function initializeSimprov() {
 
     function streamDataReplacer(streamData) {
         eventTrigger = true;
-        let chartYearRing = yearRingChart.filters();
-        let chartSpendHist = spendHistChart.filters();
-        let chartSpenderRow = spenderRowChart.filters();
+        let chartBase = [];
+        for (let [key, value] of chartMap) {
+            let tempObject = {};
+            tempObject.filters = Array.from(value.registry.filters());
+            tempObject.type = value.type;
+            tempObject.registry = value.registry;
+            chartBase.push(tempObject);
+        }
         dc.filterAll();
         streamDataFacilitator(streamData);
-        if (chartYearRing.length) {
-            yearRingChart.filter([chartYearRing]);
-        }
-        if (chartSpendHist.length) {
-            spendHistChart.filter(chartSpendHist[0]);
-        }
-        if (chartSpenderRow.length) {
-            spenderRowChart.filter([chartSpenderRow]);
+        for (let item of chartBase) {
+            if (item.filters.length) {
+                if (item.type === 'clickChart') {
+                    item.registry.filter([item.filters]);
+                }
+                else if (item.type === 'brushChart') {
+                    item.registry.filter(item.filters[0]);
+                }
+            }
         }
         eventTrigger = false;
     }

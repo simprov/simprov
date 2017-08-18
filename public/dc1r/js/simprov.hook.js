@@ -343,19 +343,25 @@ async function initializeSimprov() {
 
     function streamDataReplacer(streamData) {
         eventTrigger = true;
-        let chartYearRing = yearRingChart.filters();
-        let chartSpendHist = spendHistChart.filters();
-        let chartSpenderRow = spenderRowChart.filters();
+        let chartBase = [];
+        for (let [key, value] of chartMap) {
+            let tempObject = {};
+            tempObject.filters = Array.from(value.registry.filters());
+            tempObject.type = value.type;
+            tempObject.registry = value.registry;
+            chartBase.push(tempObject);
+        }
         dc.filterAll();
         streamDataFacilitator(streamData);
-        if (chartYearRing.length) {
-            yearRingChart.filter([chartYearRing]);
-        }
-        if (chartSpendHist.length) {
-            spendHistChart.filter(chartSpendHist[0]);
-        }
-        if (chartSpenderRow.length) {
-            spenderRowChart.filter([chartSpenderRow]);
+        for (let item of chartBase) {
+            if (item.filters.length) {
+                if (item.type === 'clickChart') {
+                    item.registry.filter([item.filters]);
+                }
+                else if (item.type === 'brushChart') {
+                    item.registry.filter(item.filters[0]);
+                }
+            }
         }
         eventTrigger = false;
     }
@@ -425,7 +431,7 @@ async function connectToStream() {
     let dsConfiguration = {};
     dsConfiguration.cuid = await simprov.getUserCUID(); // Lock ID for demo
     dsConfiguration.username = await simprov.getUserName();
-    dsConfiguration.dsKey = 'cj4y86wgk00013d8f0olixsc8cj4y86wgj00003d8fy4xz8xfk14996958543160032';
+    dsConfiguration.dsKey = await DataStreamerLink.dsKeyInput();
     dataStreamerLink = new DataStreamerLink(dsConfiguration);
     await dataStreamerLink.initialize();
     await dataStreamerLink.onEvent('DataStreamerLink.received', async (payloadData) => {

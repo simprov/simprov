@@ -1,0 +1,2882 @@
+[
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 90,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 89,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 97,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 27,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 67,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 77,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 80,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 74,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 18,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 67,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 17,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 45,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 89,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 10,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 55,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 59,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 37,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 54,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 46,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 44,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 55,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 87,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 28,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 27,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 48,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 76,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 33,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 46,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 57,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 34,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 79,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 97,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 27,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 27,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 59,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 23,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 91,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 11,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 32,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 61,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 21,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 82,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 11,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 36,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 38,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 63,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 94,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 94,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 24,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 63,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 25,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 18,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 34,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 17,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 71,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 58,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 74,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 21,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 69,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 59,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 10,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 66,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 21,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 46,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 93,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 55,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 11,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 75,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 71,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 38,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 92,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 11,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 31,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 83,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 41,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 25,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 96,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 10,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 49,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 73,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 42,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 10,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 92,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 24,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 49,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 52,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 21,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 79,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 66,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 76,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 76,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 54,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 28,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 82,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 59,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 87,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 80,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 24,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 96,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 17,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 35,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 86,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 86,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 77,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 28,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 71,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 60,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 96,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 79,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 24,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 82,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 59,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 62,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 37,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 40,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 91,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2011,
+        "Spent": 24,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2011,
+        "Spent": 36,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2011,
+        "Spent": 31,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2011,
+        "Spent": 67,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 41,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 72,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 17,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 35,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 55,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 56,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 30,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 40,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 32,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 47,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 25,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 92,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 34,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 23,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 74,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 85,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 35,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 14,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 50,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 71,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 92,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 65,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 74,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 86,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 36,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 65,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 62,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 71,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 31,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 24,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 21,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 22,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 25,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 56,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 48,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 38,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 76,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 77,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 34,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 28,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 86,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 28,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 53,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 62,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 16,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 59,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 56,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 40,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 68,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 64,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 36,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 47,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 79,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 95,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 55,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 85,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 82,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 23,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 78,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 72,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 20,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 80,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 39,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 79,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 26,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 70,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 31,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 57,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 11,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 98,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 35,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 28,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 52,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 30,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 39,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 62,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 91,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 93,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 59,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 60,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 78,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 23,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 85,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 92,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 95,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 17,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 51,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 63,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 61,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 62,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 43,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 69,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 75,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 79,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 88,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 78,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 53,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 85,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 58,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 85,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 66,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 29,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 89,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 63,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 23,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 57,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 37,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 66,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 27,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 84,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2012,
+        "Spent": 16,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2012,
+        "Spent": 61,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2012,
+        "Spent": 17,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2012,
+        "Spent": 72,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 21,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 68,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 99,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 61,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 64,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 53,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 14,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 29,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 22,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 20,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 87,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 99,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 78,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 73,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 21,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 69,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 42,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 16,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 10,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 88,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 29,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 55,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 36,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 71,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 31,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 77,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 88,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 81,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 56,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 83,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 70,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 32,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 22,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 42,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 17,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 31,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 79,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 79,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 35,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 94,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 17,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 44,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 52,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 78,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 50,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 11,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 40,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 27,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 22,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 73,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 39,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 83,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 29,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 61,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 53,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 34,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 41,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 87,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 49,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 15,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 96,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 16,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 42,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 35,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 49,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 57,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 85,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 44,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 24,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 69,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 71,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 25,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 46,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 69,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 40,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 17,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 52,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 38,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 78,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 94,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 96,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 66,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 35,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 58,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 91,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 36,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 64,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 34,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 83,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 69,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 68,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 41,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 48,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 72,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 34,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 11,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 78,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 73,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 59,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 88,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 12,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 16,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 32,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 95,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 18,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 89,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 19,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 32,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 40,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 60,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 49,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 27,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 42,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 28,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 25,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 72,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2013,
+        "Spent": 77,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2013,
+        "Spent": 43,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2013,
+        "Spent": 57,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2013,
+        "Spent": 31,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 54,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 49,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 45,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 84,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 72,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 88,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 16,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 25,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 68,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 91,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 65,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 74,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 16,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 48,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 29,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 53,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 43,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 53,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 39,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 82,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 83,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 89,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 58,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 98,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 22,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 70,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 68,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 78,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 13,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 91,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 96,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 13,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 42,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 61,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 63,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 20,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 70,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 97,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 28,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 76,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 60,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 16,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 78,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 66,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 78,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 35,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 73,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 27,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 14,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 96,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 82,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 78,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 48,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 60,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 53,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 20,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 73,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 41,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 30,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 42,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 93,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 91,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 21,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 98,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 61,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 90,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 34,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 28,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 29,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 39,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 35,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 89,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 65,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 95,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 82,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 51,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 83,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 37,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 74,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 86,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 19,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 37,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 16,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 85,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 14,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 87,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 76,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 18,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 67,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 95,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 18,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 81,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 57,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 20,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 81,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 68,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 98,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 42,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 66,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 35,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 95,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 83,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 88,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 82,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 74,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 32,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 54,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 48,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 90,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 93,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 19,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 93,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 66,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 42,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 28,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 68,
+        "Name": "Mr D"
+      }
+    ]
+  },
+  {
+    "streamData": [
+      {
+        "Year": 2014,
+        "Spent": 44,
+        "Name": "Mr A"
+      },
+      {
+        "Year": 2014,
+        "Spent": 66,
+        "Name": "Mr B"
+      },
+      {
+        "Year": 2014,
+        "Spent": 19,
+        "Name": "Mr C"
+      },
+      {
+        "Year": 2014,
+        "Spent": 96,
+        "Name": "Mr D"
+      }
+    ]
+  }
+]

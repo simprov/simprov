@@ -116,7 +116,22 @@ export default class Thumbnail {
         resizedThumbnailCanvasContext.fillStyle = 'WhiteSmoke';
         resizedThumbnailCanvasContext.fillRect(0, 0, this.requiredWidth, this.requiredHeight);
         resizedThumbnailCanvasContext.drawImage(thumbnailCanvas, dimensions.left, dimensions.top, dimensions.width, dimensions.height);
-        return resizedThumbnailCanvas.toDataURL();
+        if (thumbnailConfiguration.thumbnailFormat === undefined) {
+            thumbnailConfiguration.thumbnailFormat = 'png';
+        }
+        let finalResizedImage = '';
+        if (thumbnailConfiguration.thumbnailFormat === 'jpeg') {
+            if (thumbnailConfiguration.thumbnailQuality !== undefined) {
+                finalResizedImage = resizedThumbnailCanvas.toDataURL('image/jpeg', thumbnailConfiguration.thumbnailQuality);
+            }
+            else {
+                finalResizedImage = resizedThumbnailCanvas.toDataURL('image/jpeg', 1.0);
+            }
+        }
+        else if (thumbnailConfiguration.thumbnailFormat === 'png') {
+            finalResizedImage = resizedThumbnailCanvas.toDataURL();
+        }
+        return finalResizedImage;
     }
 
     classThumbnailInformation() {

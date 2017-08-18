@@ -24,6 +24,7 @@ export default class Core {
         this.databaseName = configuration.databaseName || 'simprov';
         this.startTimeFrame = configuration.startTimeFrame || Date.now();
         this.persistent = true;
+        this.dataLockPMode = false;
         this.checkpointInterval = configuration.checkpointInterval;
         this.configuredActions = configuration.actions;
         this.checkpointCounter = 0;
@@ -70,6 +71,7 @@ export default class Core {
             presenceTimeout: this.presenceTimeout,
             heartbeatInterval: this.heartbeatInterval
         });
+        this.overlayAlpha = 0.75;
         this.isUITreeInitialized = false;
         this.shouldUITreeUpdate = false;
         this.uiTree = {};
@@ -558,6 +560,7 @@ export default class Core {
     async persistentMode(modeBoolean) {
         if (modeBoolean !== undefined) {
             if (modeBoolean !== this.persistent) {
+                this.dataLockPMode = false;
                 this.persistent = modeBoolean;
                 await this.updateObject(1, {
                     persistent: this.persistent
@@ -589,6 +592,18 @@ export default class Core {
             else {
                 await this.consoleOutput(`Already in persistent mode ${this.persistent}`);
                 await this.toastrAlert(`Already in persistent mode ${this.persistent}`, 'warning');
+                if (this.persistent) {
+                    if (this.dataLockPMode) {
+                        this.dataLockPMode = false;
+                        await this.consoleOutput('Unlocked Persistent Mode data', true);
+                        await this.toastrAlert('Unlocked Persistent Mode data', 'info');
+                    }
+                    else if (!this.dataLockPMode) {
+                        this.dataLockPMode = true;
+                        await this.consoleOutput('Locked Persistent Mode data', true);
+                        await this.toastrAlert('Locked Persistent Mode data', 'info');
+                    }
+                }
             }
         }
         else {
@@ -656,7 +671,7 @@ export default class Core {
 
     async streamDataFetcher(requiredTimestamp) {
         let streamData = [];
-        if (this.realtime) {
+        if (this.realtime && !this.dataLockPMode) {
             if (this.persistent) {
                 streamData = await this.fetchAll('stream');
             }
@@ -1437,6 +1452,25 @@ export default class Core {
         else {
             $('#simprovCollaboration').addClass('simprov-disabled');
         }
+        $(document).keydown(async (event) => {
+            if (event.altKey && event.shiftKey && event.keyCode === 79) {
+                let tempOverlayAlpha = this.overlayAlpha;
+                this.overlayAlpha += 0.25;
+                if (this.overlayAlpha > 1) {
+                    this.overlayAlpha = 0.25;
+                }
+                $('.simprov-overlay, .simprov-annotation-overlay').animate({
+                    backgroundColor: `rgba(217, 214, 207, ${this.overlayAlpha})`
+                }, 500);
+                if (tempOverlayAlpha > this.overlayAlpha) {
+                    await this.consoleOutput(`Made overlays translucent with ${this.overlayAlpha} opacity`);
+                    await this.toastrAlert('Made overlays translucent', 'info');
+                } else {
+                    await this.consoleOutput(`Made overlays opaque with ${this.overlayAlpha} opacity`);
+                    await this.toastrAlert('Increased overlays opacity', 'info');
+                }
+            }
+        });
         $(document).tooltip({
             items: '[data-simprovTimestamp], [title]',
             content: function () {

@@ -5,10 +5,8 @@
 
 div.simprov-ui {
     position: fixed;
-    top: 20px; /*Todo adjust container position*/
-    right: 25px; /*Todo adjust container position*/
-    width: 780px; /*Todo adjust container width*/
-    height: 400px; /*Todo adjust container height*/
+    top: 20px;
+    right: 25px;
 }
 
 /*Thumbnail Section*/
@@ -16,10 +14,10 @@ div.simprov-thumbnail-scroll-content {
     display: none;
     overflow: auto;
     white-space: nowrap;
-    width: 924px; /*Todo adjust container width*/
+    width: 924px;
     position: absolute;
-    top: 19px; /*Todo adjust container position*/
-    right: 72px; /*Todo adjust container position*/
+    top: 19px;
+    right: 72px;
     background-color: rgb(217, 214, 207);
     border-left: 3px solid rgba(0, 102, 255, 0.6);
     border-top: 2px solid rgba(0, 102, 255, 0.6);
@@ -31,13 +29,13 @@ div.simprov-thumbnail-scroll-content {
 
 div.simprov-thumbnail-scroll-content-thumbnail {
     position: relative;
-    width: 300px; /*Todo adjust container width*/
-    height: 285px; /*Todo adjust container height*/
+    width: 300px;
+    height: 285px;
     display: inline-block;
     vertical-align: middle;
     margin: 4px 0 4px 4px;
     border: 2px solid rgba(80, 190, 230, 0.6);
-    transition: all 0.3s ease-out; /*Todo remove transition*/
+    transition: all 0.3s ease-out;
     z-index: -1;
 }
 
@@ -47,8 +45,8 @@ div.simprov-thumbnail-scroll-content a {
 
 a.simprov-thumbnail-scroll-content-thumbnail-annotation {
     position: absolute;
-    top: 10px; /*Todo adjust container position*/
-    right: 10px; /*Todo adjust container position*/
+    top: 10px;
+    right: 10px;
     color: rgba(45, 93, 161, 0.8);
     font-size: 18px;
 }
@@ -63,7 +61,7 @@ a.simprov-thumbnail-scroll-content-thumbnail-annotation:active {
     text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
 }
 
-div.simprov-thumbnail-scroll-content-thumbnail:hover { /*Todo remove section*/
+div.simprov-thumbnail-scroll-content-thumbnail:hover {
     border-color: rgb(255, 204, 51);
     box-shadow: 0 0 1px 0 rgba(255, 204, 51, 0.70);
 }
@@ -72,8 +70,8 @@ div.simprov-thumbnail-scroll-content-thumbnail:hover { /*Todo remove section*/
 nav.simprov-vertical-bar {
     width: 60px;
     position: absolute;
-    top: 16px; /*Todo adjust container position*/
-    right: 10px; /*Todo adjust container position*/
+    top: 16px;
+    right: 10px;
     background-color: rgb(217, 214, 207);
     border: 3px solid rgba(0, 102, 255, 0.6);
     border-right-width: thin;
@@ -111,7 +109,7 @@ nav.simprov-vertical-bar li:last-child a {
     border-bottom: none;
 }
 
-.simprov-active-icon-selection { /*Todo same set color*/
+.simprov-active-icon-selection {
     color: rgb(255, 153, 102);
     text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
 }
@@ -119,9 +117,9 @@ nav.simprov-vertical-bar li:last-child a {
 /*Vertical Bar Import Export Submenu Section*/
 div.simprov-vertical-bar-submenu-import-export {
     display: none;
-    position: absolute;
-    top: 190px; /*Todo adjust container position*/
-    right: 72px; /*Todo adjust container position*/
+    position: fixed;
+    top: 210px;
+    right: 97px;
     background-color: rgba(217, 214, 207, 0.8);
     border-radius: 3px 0 0 3px;
     z-index: 2;
@@ -157,9 +155,9 @@ div.simprov-vertical-bar-submenu-import-export a:active {
 /*Vertical Bar Real Time Submenu Section*/
 div.simprov-vertical-bar-submenu-realtime {
     display: none;
-    position: absolute;
-    top: 233px; /*Todo adjust container position*/
-    right: 72px; /*Todo adjust container position*/
+    position: fixed;
+    top: 253px;
+    right: 97px;
     background-color: rgba(217, 214, 207, 0.8);
     border-radius: 3px 0 0 3px;
     z-index: 2;
@@ -195,9 +193,9 @@ div.simprov-vertical-bar-submenu-realtime a:active {
 /*Vertical Bar Collaboration Submenu Section*/
 div.simprov-vertical-bar-submenu-collaboration {
     display: none;
-    position: absolute;
-    top: 276px; /*Todo adjust container position*/
-    right: 72px; /*Todo adjust container position*/
+    position: fixed;
+    top: 296px;
+    right: 97px;
     background-color: rgba(217, 214, 207, 0.8);
     border-radius: 3px 0 0 3px;
     z-index: 2;
@@ -235,13 +233,13 @@ div.simprov-overlay {
     display: none;
     font-family: 'Roboto Slab Regular', serif;
     position: fixed;
-    top: 50%; /*Todo adjust container position*/
+    top: 50%;
     left: 50%;
-    width: 90%; /*Todo adjust container width*/
-    height: 838px; /*Todo adjust container height*/
+    width: 90%;
+    height: 838px;
     transform: translate(-50%, -50%);
     padding: 1px;
-    background-color: rgba(217, 214, 207, 0.6);
+    background-color: rgba(217, 214, 207, 0.75);
     border: thin solid rgba(0, 102, 255, 0.6);
 }
 
@@ -327,8 +325,6 @@ div.simprov-overlay-table-header {
 
 div.simprov-overlay-table-header table {
     border-collapse: collapse;
-    /*table-layout: fixed;*/
-    /*border:none;*/
 }
 
 div.simprov-overlay-table-header th {
@@ -403,7 +399,6 @@ div.simprov-overlay-table td {
 
 a.simprov-table-icons {
     padding: 8px;
-    /*color: rgba(45, 93, 161, 0.8);*/
     font-size: 24px;
 }
 
@@ -438,13 +433,13 @@ div.simprov-annotation-overlay {
     display: none;
     font-family: 'Roboto Slab Regular', serif;
     position: fixed;
-    top: 50%; /*Todo adjust container position*/
+    top: 50%;
     left: 50%;
-    width: 300px; /*Todo adjust container width*/
-    height: 300px; /*Todo adjust container height*/
+    width: 300px;
+    height: 300px;
     transform: translate(-50%, -50%);
     padding: 1px;
-    background-color: rgba(217, 214, 207, 0.6);
+    background-color: rgba(217, 214, 207, 0.75);
     border: thin solid rgba(0, 102, 255, 0.6);
 }
 

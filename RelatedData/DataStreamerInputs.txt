@@ -1,0 +1,30 @@
+// dc1r, dc1rc1, dc1rc2
+Name,Spent,Year
+
+function (requiredData) {
+            return new Promise((resolve) => {
+                let arrayData = requiredData.streamData;
+                let selectedValues = [];
+                for (let item of arrayData) {
+                    selectedValues.push([item.Name, item.Spent.toString(), item.Year.toString()]);
+                    }
+                    selectedValues.reverse();
+                resolve(selectedValues);
+            });
+        }`
+		
+
+// dc2r, dc2rc1, dc2rc2
+Date,Open,High,Low,Close,Volume,Oi
+
+`function (requiredData) {
+            return new Promise((resolve) => {
+                let arrayData = requiredData.streamData;
+                let selectedValues = [];
+                for (let item of arrayData) {
+                    selectedValues.push([item.date, item.open, item.high, item.low, item.close, item.volume, item.oi]);
+                    }
+                    selectedValues.reverse();
+                resolve(selectedValues);
+            });
+        }`
