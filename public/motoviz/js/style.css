@@ -1,0 +1,158 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+ul.icons > li {
+    margin-left: 0;
+    padding-left: 0;
+    list-style-type: none;
+    display:inline;
+}
+
+div[rel="icons"] {
+    text-align: center;
+}
+
+div[rel="icons"] a {
+    text-decoration: none;
+}
+
+div.header {
+    background-color: #cce;
+    height: 100%;
+    height: auto;
+    vertical-align: top;
+}
+
+div.well {
+    height: 100%;
+}
+
+.nopad-l {
+    padding-left: 0 !important;
+}
+
+.nopad-h {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+html, body {
+  height: 100%;
+}
+
+.container, .container-fluid {
+  height: 100%;
+}
+
+.container .row, .container-fluid  .row {
+  min-height: 100%;
+}
+
+.row {
+    height: 100%;
+}
+
+
+@media (max-width: 767px) {
+  /* XS size */
+    div.sidebar-nav-fixed {
+        display: none;
+    }
+
+/*
+    div.sidebar-nav-fixed.affix {
+       position: relative !important;
+    }*/
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* SM size */
+    div.sidebar-nav-fixed {
+        display: none;
+    }
+
+    /*div.sidebar-nav-fixed.affix {
+       position: relative !important;
+    }*/
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* MD size */
+    div.sidebar-nav-fixed {
+        width: 15%;
+        height: 100%;
+    }
+}
+@media (min-width: 1200px) {
+    /* LG size */
+    div.sidebar-nav-fixed {
+        width: 15%;
+        height: 100%;
+    }
+}
+
+#parcoords {
+    height: 25%;
+}
+
+#resume-table, #language-table {
+    font-size: 1.2em;
+}
+
+tr.dc-table-row {
+    margin-bottom: 2em;
+}
+
+tr.dc-table-row > td {
+    margin-top: 3px;
+    vertical-align: top;
+    padding-bottom: 5px;
+}
+
+tr.dc-table-row > td:first-child {
+    width: 15%;
+/*    color: #bbb;
+    font-weight: bold;*/
+}
+
+tr.dc-table-row > td::nth-child(2) {
+    width: 85%;
+}
+
+span.employer, span.sector, span.role, span.timespan, span.lang-level, , span.language {
+    font-size: 1.2em;
+    margin-top: 0;
+}
+
+span.sector, span.role, span.timespan, span.lang-level {
+    color: #aaa;
+}
+
+span.employer, span.language {
+    color: #c44;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    color: #c44;
+}
+
+h3 {
+    color: #aaa;
+}
+
+text.pie-slice, text.row {
+    fill: #000 !important;
+}
+
+div[rel="instructions"] > div > p.alert {
+    display: block;
+    height: 100%;
+}

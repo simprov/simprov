@@ -1,0 +1,117 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Motorcycle dataviz</title>
+    <link rel="stylesheet" href="css/sweetalert2.min.css">
+    <link rel="stylesheet" href="css/toastr.min.css">
+    <link rel="stylesheet" href="css/dc.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
+    <link rel="stylesheet" href="css/simprov.ui.css">
+    <link rel="stylesheet" href="css/Treant.css">
+    <!-- <link rel="stylesheet" href="css/modify.css"/> -->
+
+    <link rel="stylesheet" type="text/css" href="js/dc/2.0.0-b26/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="js/colorbrewer/colorbrewer.css"/>
+    <link rel="stylesheet" type="text/css" href="js/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <a class="navbar-brand" href="#">
+        Motorcycle Math Dataviz competition (CrowdAnalytix)
+      </a>
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <ul class="dropdown-menu" role="menu">
+                <li>
+                  <a href="https://www.crowdanalytix.com/contests/visualization-motorcycle-math" target="_blank">
+                    Competition page
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><strong>Bring me to the insights</strong><span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#" onclick="speedPatterns();">Speed patterns</a></li>
+                <li><a href="#" onclick="accelerationPatterns();">Acceleration patterns</a></li>
+                <li><a href="#" onclick="bankingDifferences();">Banking behavior</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Circuit metric<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li><a href="#" onclick="changeValueAccessor(circuitMap, {name: 'speed', label: 'Average speed', units: 'm/s'});">Average Speed (m/s)</a></li>
+                <li><a href="#" onclick="changeValueAccessor(circuitMap, {name: 'acc', label: 'Average acceleration', units: 'm/s\xb2;'});">Average acceleration (m/s&sup2;)</a></li>
+                <li><a href="#" onclick="changeValueAccessor(circuitMap, {name: 'bank', label: 'Banking angle', units: 'deg'});">Banking angle (degrees)</a></li>
+
+              </ul>
+            </li>
+            <li>
+              <a href="#" onclick="switchDriver()">Switch driver</a>
+            </li>
+            <li>
+              <a href="#" onclick="dc.filterAll();dc.redrawAll();">
+                <i class="fa fa-refresh"></i>
+                Clear filters
+              </a>
+            </li>
+          </ul>
+          <p class="navbar-text navbar-right">
+            by
+            <a href="/">
+              Mario Alberich
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </p>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <h2 id="loading" class="alert alert-warning">
+          <i class="fa fa-refresh fa-spin fa-fw"></i>
+          Please, be patient as it may take a while to load the data
+        </h2>
+
+        <div class="col-lg-6 col-sm-12">
+          <div id="circuit" class="col-xs-12">
+            <h2><span rel="metric">Average speed</span> by circuit segment</h2>
+            <div id="insightExplain" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+          <h2>Click or brush to filter</h2>
+          <div class="row">
+            <div id="lap" class="col-xs-7"></div>
+            <div id="driver" class="col-xs-5"></div>
+          </div>
+          <div id="radius" class="col-xs-12"></div>
+          <div id="speed" class="col-xs-12"></div>
+          <div id="accel" class="col-xs-12"></div>
+        </div>
+      </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="js/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/crossfilter/crossfilter.min.js"></script>
+    <script type="text/javascript" src="js/dc/2.0.0-b26/dc.min.js"></script>
+    <script type="text/javascript" src="js/colorbrewer/colorbrewer.js"></script>
+    <script src="js/raphael.js"></script>
+    <script src="js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/motoviz.js"></script>
+    <script type="text/javascript" src="js/insights.js"></script>
+    <script src="../simprov.dev.js"></script>
+    <script src="js/simprov.hook.js"></script>
+  </body>
+</html>

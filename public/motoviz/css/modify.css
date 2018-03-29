@@ -1,0 +1,42 @@
+@font-face {
+    font-family: Roboto Slab Regular;
+    src: url(../../fonts/RobotoSlab-Regular.ttf);
+}
+
+body {
+    font-family: 'Roboto Slab Regular', serif;
+    max-width: 980px;
+    height: 1195px;
+    margin: auto;
+    padding: 15px;
+}
+
+#dcTable {
+    max-width: 950px;
+    padding: 15px;
+    border-collapse: collapse;
+}
+
+#dcTable td {
+    width: 190px;
+    height: 25px;
+    border-bottom: thin solid rgba(221, 221, 221, 0.6);
+}
+
+#dcTable th {
+    text-align: left;
+    background-color: rgba(188, 214, 233, 0.2);
+}
+
+#dcTable tr {
+    transition: all 0.3s ease-out;
+}
+
+#dcTable tr:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+#monthly-volume-chart g.y {
+    display: none;
+}
+
