@@ -244,7 +244,7 @@ div.simprov-overlay {
     height: 838px;
     transform: translate(-50%, -50%);
     padding: 1px;
-    background-color: rgba(217, 214, 207, 0.75);
+    background-color: rgba(217, 214, 207, 0.95);
     border: thin solid rgba(0, 102, 255, 0.6);
 }
 

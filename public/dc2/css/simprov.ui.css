@@ -39,6 +39,12 @@ div.simprov-thumbnail-scroll-content-thumbnail {
     z-index: -1;
 }
 
+div.simprov-thumbnail-scroll-content-thumbnail img {
+    width: 300px;
+    height: 285px;
+}
+
+
 div.simprov-thumbnail-scroll-content a {
     text-decoration: none;
 }

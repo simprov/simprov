@@ -1,23 +1,23 @@
 var circuitMap = dc.geoChoroplethChart("#circuit")
                    .height(575)
-                   .width(700),
+                   .width(600),
     bcDriver = dc.barChart("#driver")
-                   .height(200)
-                   .width(200),
+                   .height(160)
+                   .width(120),
     bcLap = dc.barChart("#lap")
-                   .height(200)
-                   .width(400),
+                   .height(160)
+                   .width(280),
     bcSpeed = dc.lineChart("#speed")
-                   .height(150)
-                   .width(600)
+                   .height(160)
+                   .width(400)
                    .renderArea(true),
     bcAcc = dc.lineChart("#accel")
-                   .height(150)
-                   .width(600)
+                   .height(160)
+                   .width(400)
                    .renderArea(true),
     bcRad = dc.lineChart("#radius")
-                   .height(150)
-                   .width(600)
+                   .height(160)
+                   .width(400)
                    .renderArea(true),
     decformat = d3.format(".2f"),
 
@@ -34,10 +34,10 @@ var circuitMap = dc.geoChoroplethChart("#circuit")
     },
 
     margins = {
-      top: 20,
-      right: 20,
-      bottom: 0,
-      left: 20
+      top: 10,
+      right: 5,
+      bottom: -10,
+      left: 36
     };
 
 function changeValueAccessor(chart, attribute) {
@@ -72,6 +72,9 @@ function changeValueAccessor(chart, attribute) {
 
   chart.valueAccessor(
     function (d) {
+        if (d.value['count'] < 1) {
+            return -10000;
+        }
       return d.value[attribute.name];
     }
   ).colorDomain(
@@ -83,7 +86,11 @@ function changeValueAccessor(chart, attribute) {
     }
   );
 
-  if (redraw) {
+  const quantiles = d3.scale.quantile().domain(chart.colorDomain()).range(colorbrewer.RdYlBu[10]).quantiles();
+  console.log(chart.colorDomain(), quantiles);
+  chart.colors(d3.scale.threshold().domain([-9999,...quantiles]).range(['#D3D3D3',...colorbrewer.RdYlBu[10].slice().reverse()]));
+
+    if (redraw) {
     $('[rel="metric"').html(attribute.label);
     var chartFilter = chart.filter();
     chart.filter(null)
@@ -293,7 +300,7 @@ d3.csv('data/lap_fragments_rows.csv')
       .elasticX(true)
       .elasticY(true)
       .xAxisLabel('# Lap')
-      .yAxisLabel('data points')
+      // .yAxisLabel('data points')
       .gap(5)
       .xUnits(dc.units.ordinal);
 
@@ -326,19 +333,31 @@ d3.csv('data/lap_fragments_rows.csv')
             )
           )
       )
-      .elasticX(true)
+      .elasticX(false)
       .elasticY(true)
       .xAxisLabel('Driver')
       //.gap(10)
-      .yAxisLabel('data points')
+      // .yAxisLabel('data points')
       .xUnits(dc.units.ordinal);
 
     bcDriver
       .xAxis()
-      .tickValues(['Racer', 'Journalist']);
+        .ticks(2)
+        .tickFormat((d) => d === 1 ? "Racer" : "Journalist");
+
+    bcDriver.on('pretransition', function(chart) {
+        chart.selectAll("rect.bar").on("click", function (d) {
+            console.log('click');
+            chart.filter(null)
+                .filter(d.data.key)
+                .redrawGroup();
+        });
+    });
+
+    bcDriver.filter(1);
 
 
-    bcRad
+        bcRad
       .dimension(dimensions.bank)
       .group(groups.bank)
       .margins(margins)
@@ -366,7 +385,7 @@ d3.csv('data/lap_fragments_rows.csv')
       .elasticX(true)
       .elasticY(true)
       .xAxisLabel('Banking angle (degrees)')
-      .yAxisLabel('data points');
+      // .yAxisLabel('data points');
 
     bcSpeed
       .dimension(dimensions.speed)
@@ -397,7 +416,7 @@ d3.csv('data/lap_fragments_rows.csv')
           )
       )
       .xAxisLabel('Speed (km/h)')
-      .yAxisLabel('data points')
+      // .yAxisLabel('data points')
       .elasticX(true)
       .elasticY(true);
 
@@ -430,7 +449,7 @@ d3.csv('data/lap_fragments_rows.csv')
           )
       )
       .xAxisLabel('Accelleration (m/s\xb2)')
-      .yAxisLabel('data points')
+      // .yAxisLabel('data points')
       .elasticX(true)
       .elasticY(true);
 
@@ -449,10 +468,6 @@ d3.csv('data/lap_fragments_rows.csv')
             .on(
             'renderlet',
             function (chart) {
-                console.log("DOMAIN:", chart.colorDomain());
-                const quantiles = d3.scale.quantile().domain(chart.colorDomain()).range(colorbrewer.RdYlBu[10]).quantiles();
-                console.log(quantiles);
-                chart.colors(d3.scale.threshold().domain([1e-5,...quantiles]).range(['gray',...colorbrewer.RdYlBu[10].slice().reverse()]));
               chart
                 .selectAll("g.fragment > path")
                 .attr("stroke-width", "9px")
@@ -478,9 +493,9 @@ d3.csv('data/lap_fragments_rows.csv')
           ).projection(
             d3.geo
               .mercator()
-              .translate([351, 285])
+              .translate([280, 285])
               .center([-6.57258, 37.3607])
-              .scale(3300000)
+              .scale(3000000)
 
           ).overlayGeoJson(
             fragmentsJson.features,

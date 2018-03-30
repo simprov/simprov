@@ -8,22 +8,24 @@
     <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="css/simprov.ui.css">
     <link rel="stylesheet" href="css/Treant.css">
-    <!-- <link rel="stylesheet" href="css/modify.css"/> -->
 
     <link rel="stylesheet" type="text/css" href="js/dc/2.0.0-b26/dc.css"/>
     <link rel="stylesheet" type="text/css" href="js/colorbrewer/colorbrewer.css"/>
     <link rel="stylesheet" type="text/css" href="js/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="js/font-awesome/css/font-awesome.min.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="js/font-awesome/css/font-awesome.min.css"/> -->
+    <link rel="stylesheet" href="css/simprov.ui.css">
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <!-- <link rel="stylesheet" href="css/modify.css"/> -->
   </head>
   <body>
     <nav class="navbar navbar-default">
-      <a class="navbar-brand" href="#">
-        Motorcycle Math Dataviz competition (CrowdAnalytix)
-      </a>
-      <div class="container-fluid">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            Motorcycle Math
+          </a>
+        </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -62,9 +64,8 @@
               </a>
             </li>
           </ul>
-          <p class="navbar-text navbar-right">
-            by
-            <a href="/">
+          <p class="nav navbar-nav navbar-text navbar-right">
+            by <a href="https://marioalberich.com">
               Mario Alberich
               <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </a>
@@ -72,21 +73,21 @@
         </div>
       </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <h2 id="loading" class="alert alert-warning">
           <i class="fa fa-refresh fa-spin fa-fw"></i>
           Please, be patient as it may take a while to load the data
         </h2>
 
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-7 col-sm-12">
           <div id="circuit" class="col-xs-12">
             <h2><span rel="metric">Average speed</span> by circuit segment</h2>
             <div id="insightExplain" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
             </div>
           </div>
         </div>
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-5 col-sm-12">
           <h2>Click or brush to filter</h2>
           <div class="row">
             <div id="lap" class="col-xs-7"></div>
