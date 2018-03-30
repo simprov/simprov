@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Expenses by Function - All</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+
+</head>
+
+<style>
+    #monthly-volume-chart g.y {
+        display: none;
+    }
+
+    /* testing out d3 tooltip */
+    .d3-tip {
+      line-height: 1;
+      font-weight: bold;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+      box-sizing: border-box;
+      display: inline;
+      font-size: 10px;
+      width: 100%;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.8);
+      content: "\25BC";
+      position: absolute;
+      text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+      margin: -1px 0 0 0;
+      top: 100%;
+      left: 0;
+    }
+
+    .campusLabel {
+      font: 300 18px "Helvetica Neue";
+      color: #525252;
+    }
+
+    .chart-title {
+      font-family: 'Lato', futura, georgia;
+      letter-spacing: 1px;
+      line-height: 15px;
+      text-transform: Uppercase;
+      text-align: center;
+      color: #525252;
+    }
+
+
+    h3 {
+      font-family: 'Helvetica Neue';
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    body {
+      min-height: 2000px;
+      padding-top: 120px;
+    }
+
+    .myName {
+      font-family: 'Helvetica Neue';
+      font-size: 18px;
+      font-weight: 300;
+      text-align: right;
+      color: #525252;
+      padding-left: 160px;
+    }
+
+</style>
+<body>
+    <!-- Fixed navbar -->
+      <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+         <h3>University of California System Campuses : Revenue & Expense Trends</h3>
+        </div>
+          <div class="nav navbar-nav">
+          <span class="btn-group" data-toggle="buttons-radio">
+              <button type="button" class="btn btn-default active" id="btnExpenditures">Expenditures by Function</button>
+              <button type="button" class="btn btn-default" id="btnRevenues">Revenues By Source</button>
+              <button type="button" class="btn btn-default" id="btnExpenseTarget">Expenses By Target</button>
+            </span> 
+           <span class="btn-group"> 
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                About <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a target="_blank" href="http://twitter.com/saraquigley" title="twitter">by Sara Quigley</a></li>
+                <li class="divider"></li>
+                <li><a data-toggle="modal" href="#myModal">Source Data</a></li>
+              </ul>
+          </span>
+          <span class="myName"><a target="_blank" href="http://twitter.com/saraquigley" title="@saraquigley">@saraquigley</a>
+          </span> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">About these graphs</h4>
+            </div>
+            <div class="modal-body">
+              <h4 class="modal-title">The data source</h4>
+              <p>The data source for these graphs is a report called <a target="_blank" href="http://finreports.universityofcalifornia.edu/index.php?file=retrends/retrends_2012.pdf">University of California Revenue and Expense Trends (Fiscal Years 2008 through 2012)</a> which was prepared by the UC Office of the President (UCOP). Amounts displayed in the graphs are in thousands of dollars.
+              <hr>
+              <h4 class="modal-title">The technology</h4>
+              <p>These interactive graphs were made using an excellent javascript charting library called <a target="_blank" href="http://nickqizhu.github.io/dc.js/">dc.js</a>, which was built to work natively with <a target="_blank" href="http://square.github.com/crossfilter/">crossfilter</a> and leverages the super awesome <a target="_blank" href="http://d3js.org">d3.js</a>.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    <!-- Expenditures by function : the default chart -->
+    <div class="container" id="expenditures-container">
+        <div class="row">
+              <div id="function-chart">
+                  <span class="chart-title">&nbsp;&nbsp;&nbsp;Expenditures by Function <br>&nbsp;&nbsp;&nbsp;(bar & donut) </span>
+                  <a class="reset" href="javascript:functionChart.filterAll('expenditures');dc.redrawAll('expenditures');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="function-pie-chart">
+                <strong>&nbsp;&nbsp;&nbsp;</strong>
+                  <a class="reset" href="javascript:functionPieChart.filterAll('expenditures');dc.redrawAll('expenditures');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="exp-by-campus-chart">
+                  <span class="chart-title">Expenditures by Campus</span>
+                  <a class="reset" href="javascript:expByCampusChart.filterAll('expenditures');dc.redrawAll('expenditures');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="exp-trend-bar-chart">
+                <span class="chart-title">Fiscal Year</span>
+                <a class="reset" href="javascript:expFiveYearBarChart.filterAll('expenditures');dc.redrawAll('expenditures');" style="display: none;">reset</a>
+                <div class="clearfix"></div>
+              </div>  
+        </div>
+        <div class="row">
+        <BR>
+        </div>
+        <div class="row">
+            <div>
+                <div id="exp-data-count" class="dc-data-count">
+                    <span class="filter-count"></span> selected out of <span class="total-count"></span> records 
+                </div>
+            </div>
+            <BR>
+            <table id="exp-data-table" class="table table-hover dc-data-table">
+                <thead>
+                <tr class="header">
+                    <th>Function</th>
+                    <th>Amount <span style="font-size: 11px">(in thousands)</span></th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- Revenues by source -->
+    <div class="container" id="revenues-container" style="display: none;">
+        <div class="row">
+            <div id="revenue-source-chart">
+                <span class="chart-title">&nbsp;&nbsp;&nbsp;Revenue by Source <br>&nbsp;&nbsp;&nbsp;(bar & donut) </span>
+                <a class="reset" href="javascript:sourceOfRevenueChart.filterAll('revenue');dc.redrawAll('revenue');" style="display: none;">reset</a>
+                <div class="clearfix"></div>
+            </div>
+              <div id="rev-source-pie-chart">
+                <strong>&nbsp;&nbsp;&nbsp;</strong>
+                  <a class="reset" href="javascript:revSourcePieChart.filterAll('revenue');dc.redrawAll('revenue');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="rev-by-campus-chart">
+                  <span class="chart-title">Revenue by Campus</span>
+                  <a class="reset" href="javascript:revByCampusChart.filterAll('revenue');dc.redrawAll('revenue');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="rev-trend-bar-chart">
+                <span class="chart-title">Fiscal Year</span>
+                <a class="reset" href="javascript:revFiveYearBarChart.filterAll('revenue');dc.redrawAll('revenue');" style="display: none;">reset</a>
+                <div class="clearfix"></div>
+              </div>  
+        </div>
+        <div class="row">
+          <BR>
+        </div>
+        <div class="row">
+            <div>
+                <div class="dc-data-count" id="rev-data-count">
+                    <span class="filter-count"></span> selected out of <span class="total-count"></span> records 
+                </div>
+            </div>
+            <BR>
+            <table class="table table-hover dc-data-table" id="rev-data-table">
+                <thead>
+                <tr class="header">
+                    <th>Function</th>
+                    <th>Amount <span style="font-size: 11px">(in thousands)</span></th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!-- Expenses by target -->
+    <div class="container" id="targetExpenses-container" style="display: none;">
+        <div class="row">
+              <div id="targetExpenses-chart">
+                <span class="chart-title">&nbsp;&nbsp;&nbsp;Expenses by Target<br>&nbsp;&nbsp;&nbsp;(bar & donut)</span>
+                <a class="reset" href="javascript:targetExpenseChart.filterAll('targetExpenses');dc.redrawAll('targetExpenses');" style="display: none;">reset</a>
+                <div class="clearfix"></div>
+              </div>
+              <div id="targetExpenses-pie-chart">
+                <strong>&nbsp;&nbsp;&nbsp;</strong>
+                  <a class="reset" href="javascript:targetExpensePieChart.filterAll('targetExpenses');dc.redrawAll('targetExpenses');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="targExp-by-campus-chart">
+                  <span class="chart-title">Expenses by Campus</span>
+                  <a class="reset" href="javascript:targetExpByCampusChart.filterAll('targetExpenses');dc.redrawAll('targetExpenses');" style="display: none;">reset</a>
+                  <div class="clearfix"></div>
+              </div>
+              <div id="targExp-trend-bar-chart">
+                <span class="chart-title">Fiscal Year</span>
+                <a class="reset" href="javascript:targetExpFiveYearBarChart.filterAll('targetExpenses');dc.redrawAll('targetExpenses');" style="display: none;">reset</a>
+                <div class="clearfix"></div>
+              </div>
+        </div>
+        <div class="row">
+          <br>
+        </div>
+        <div class="row">
+            <div>
+                <div class="dc-data-count" id="targExp-data-count">
+                    <span class="filter-count"></span> selected out of <span class="total-count"></span> records 
+                </div>
+            </div>
+            <BR>
+            <table class="table table-hover dc-data-table" id="targExp-data-table">
+                <thead>
+                <tr class="header">
+                    <th>Expense Target</th>
+                    <th>Amount <span style="font-size: 11px">(in thousands)</span></th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+<script type="text/javascript" src="javascript/jquery.js"></script>
+<script type="text/javascript" src="javascript/bootstrap.min.js"></script>
+<script type="text/javascript" src="javascript/d3.min.js"></script>
+<script type="text/javascript" src="javascript/crossfilter.js"></script>
+<script type="text/javascript" src="javascript/dc.js"></script>
+<script type="text/javascript" src="javascript/d3.tip.min.js"></script>
+<script type="text/javascript" src="javascript/expenses_all.js"></script>
+<script type="text/javascript" src="javascript/expensesTarget_all.js"></script>
+<script type="text/javascript" src="javascript/revenue_all.js"></script>
+<script type="text/javascript" src="javascript/ucTrends_all.js"></script>
+</body>
+</html>
