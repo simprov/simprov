@@ -449,15 +449,6 @@ d3.csv('data/lap_fragments_rows.csv')
             .on(
             'renderlet',
             function (chart) {
-                changeValueAccessor(
-                    chart,
-                    {
-                        name: 'speed',
-                        label: 'Average speed',
-                        units: 'm/s',
-                        redraw: false
-                    }
-                );
                 console.log("DOMAIN:", chart.colorDomain());
                 const quantiles = d3.scale.quantile().domain(chart.colorDomain()).range(colorbrewer.RdYlBu[10]).quantiles();
                 console.log(quantiles);
