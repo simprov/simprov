@@ -8,6 +8,7 @@ const contentBase = path.resolve(baseDirectory, 'public');
 const buildBanner = `SIMProv v${packageInformation.version}`;
 
 module.exports = {
+    mode: "development",
     entry: {
         simprov: sourcePath
     },
