@@ -1,0 +1,594 @@
+@font-face {
+    font-family: Roboto Slab Regular;
+    src: url(../../fonts/RobotoSlab-Regular.ttf);
+}
+
+div.simprov-ui {
+    position: fixed;
+    top: 20px;
+    right: 25px;
+}
+
+/*Thumbnail Section*/
+div.simprov-thumbnail-scroll-content {
+    display: none;
+    overflow: auto;
+    white-space: nowrap;
+    width: 924px;
+    position: absolute;
+    top: 19px;
+    right: 72px;
+    background-color: rgb(217, 214, 207);
+    border-left: 3px solid rgba(0, 102, 255, 0.6);
+    border-top: 2px solid rgba(0, 102, 255, 0.6);
+    border-bottom: 2px solid rgba(0, 102, 255, 0.6);
+    border-radius: 3px 0 0 3px;
+    padding-right: 4px;
+    z-index: 1;
+}
+
+div.simprov-thumbnail-scroll-content-thumbnail {
+    position: relative;
+    width: 300px;
+    height: 285px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 4px 0 4px 4px;
+    border: 2px solid rgba(80, 190, 230, 0.6);
+    transition: all 0.3s ease-out;
+    z-index: -1;
+}
+
+div.simprov-thumbnail-scroll-content-thumbnail img {
+    width: 300px;
+    height: 285px;
+}
+
+div.simprov-thumbnail-scroll-content a {
+    text-decoration: none;
+}
+
+a.simprov-thumbnail-scroll-content-thumbnail-annotation {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: rgba(45, 93, 161, 0.8);
+    font-size: 18px;
+}
+
+a.simprov-thumbnail-scroll-content-thumbnail-annotation:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+a.simprov-thumbnail-scroll-content-thumbnail-annotation:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+div.simprov-thumbnail-scroll-content-thumbnail:hover {
+    border-color: rgb(255, 204, 51);
+    box-shadow: 0 0 1px 0 rgba(255, 204, 51, 0.70);
+}
+
+/*Vertical Bar Section*/
+nav.simprov-vertical-bar {
+    width: 60px;
+    position: absolute;
+    top: 16px;
+    right: 10px;
+    background-color: rgb(217, 214, 207);
+    border: 3px solid rgba(0, 102, 255, 0.6);
+    border-right-width: thin;
+    border-left-width: thin;
+    border-radius: 3px 3px;
+}
+
+nav.simprov-vertical-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav.simprov-vertical-bar ul a {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px;
+    transition: all 0.3s ease;
+    color: rgba(45, 93, 161, 0.8);
+    border-bottom: thin solid rgba(0, 102, 255, 0.6);
+}
+
+nav.simprov-vertical-bar a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+nav.simprov-vertical-bar a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+nav.simprov-vertical-bar li:last-child a {
+    border-bottom: none;
+}
+
+.simprov-active-icon-selection {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Vertical Bar Import Export Submenu Section*/
+div.simprov-vertical-bar-submenu-import-export {
+    display: none;
+    position: fixed;
+    top: 210px;
+    right: 97px;
+    background-color: rgba(217, 214, 207, 0.8);
+    border-radius: 3px 0 0 3px;
+    z-index: 2;
+    border-left: 3px solid rgba(0, 102, 255, 0.6);
+    border-bottom: thin solid rgba(0, 102, 255, 0.6);
+    border-top: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-import-export a {
+    width: 60px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px 0;
+    color: rgba(45, 93, 161, 0.8);
+    border-right: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-import-export a:last-child {
+    border-right: none;
+}
+
+div.simprov-vertical-bar-submenu-import-export a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+div.simprov-vertical-bar-submenu-import-export a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Vertical Bar Real Time Submenu Section*/
+div.simprov-vertical-bar-submenu-realtime {
+    display: none;
+    position: fixed;
+    top: 253px;
+    right: 97px;
+    background-color: rgba(217, 214, 207, 0.8);
+    border-radius: 3px 0 0 3px;
+    z-index: 2;
+    border-left: 3px solid rgba(0, 102, 255, 0.6);
+    border-bottom: thin solid rgba(0, 102, 255, 0.6);
+    border-top: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-realtime a {
+    width: 60px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px 0;
+    color: rgba(45, 93, 161, 0.8);
+    border-right: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-realtime a:last-child {
+    border-right: none;
+}
+
+div.simprov-vertical-bar-submenu-realtime a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+div.simprov-vertical-bar-submenu-realtime a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Vertical Bar Collaboration Submenu Section*/
+div.simprov-vertical-bar-submenu-collaboration {
+    display: none;
+    position: fixed;
+    top: 296px;
+    right: 97px;
+    background-color: rgba(217, 214, 207, 0.8);
+    border-radius: 3px 0 0 3px;
+    z-index: 2;
+    border-left: 3px solid rgba(0, 102, 255, 0.6);
+    border-bottom: thin solid rgba(0, 102, 255, 0.6);
+    border-top: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-collaboration a {
+    width: 60px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px 0;
+    color: rgba(45, 93, 161, 0.8);
+    border-right: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-vertical-bar-submenu-collaboration a:last-child {
+    border-right: none;
+}
+
+div.simprov-vertical-bar-submenu-collaboration a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+div.simprov-vertical-bar-submenu-collaboration a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Overlay Section*/
+div.simprov-overlay {
+    display: none;
+    font-family: 'Roboto Slab Regular', serif;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    height: 838px;
+    transform: translate(-50%, -50%);
+    padding: 1px;
+    background-color: rgba(217, 214, 207, 0.75);
+    border: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-overlay a {
+    text-decoration: none;
+}
+
+a.simprov-overlay-close {
+    color: rgba(45, 93, 161, 0.8);
+    position: absolute;
+    top: -21px;
+    right: -19px;
+    font-size: 18px;
+}
+
+a.simprov-overlay-close:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+a.simprov-overlay-close:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Overlay Tree Container Section*/
+div.simprov-overlay-tree-container {
+    width: auto;
+    height: 838px;
+    margin-left: 652px;
+    overflow: auto;
+}
+
+.node {
+    cursor: pointer;
+    font-family: 'Roboto Slab Regular', serif;
+    padding: 0 2px;
+    min-width: 100px;
+    text-align: center;
+    border: 2px solid #E8E8E3;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 250);
+    transition: all 0.3s ease-out;
+}
+
+.node:hover {
+    border-color: rgb(255, 204, 51) !important;
+    box-shadow: 0 0 1px 0 rgba(255, 204, 51, 0.70) !important;
+}
+
+.node:active {
+    border-color: rgb(255, 153, 102) !important;
+    box-shadow: 0 0 1px rgba(255, 153, 102, 0.70) inset !important;
+}
+
+.node .node-name {
+    color: #9B9B9B;
+}
+
+.node .node-name:hover {
+    color: rgb(80, 190, 230);
+}
+
+/*Overlay Table Container Section*/
+div.simprov-overlay-table-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 840px;
+    width: 651px;
+    border-right: thin solid rgba(0, 102, 255, 0.6);
+    overflow: auto;
+}
+
+/*Overlay Table Header Section*/
+div.simprov-overlay-table-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 652px;
+    z-index: 1;
+}
+
+div.simprov-overlay-table-header table {
+    border-collapse: collapse;
+}
+
+div.simprov-overlay-table-header th {
+    width: 160px;
+    border-top: none;
+    border-left: thin solid #e1e4ff;
+    font-weight: lighter;
+    color: #e1e4ff;
+    background-color: rgba(69, 112, 230, 1);
+}
+
+div.simprov-overlay-table-header th:first-child {
+    border-left: none;
+}
+
+div.simprov-overlay-table-header th:last-child {
+    border-right: thin solid rgba(69, 112, 230, 1);
+}
+
+/*Overlay Table Section*/
+div.simprov-overlay-table {
+    position: absolute;
+    top: 23px;
+    left: 0;
+    width: 652px;
+}
+
+div.simprov-overlay-table table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+div.simprov-overlay-table tr {
+    transition: all 0.3s ease-out;
+}
+
+div.simprov-overlay-table table a {
+    color: rgba(45, 93, 161, 0.8);
+    transition: all 0.3s ease-out;
+}
+
+div.simprov-overlay-table table a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+div.simprov-overlay-table table a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+div.simprov-overlay-table td {
+    border: thin solid rgba(0, 102, 255, 0.6);
+    border-left: none;
+    border-top: none;
+}
+
+div.simprov-overlay-table td:last-child {
+    border-right: none;
+}
+
+div.simprov-overlay-table tr:last-child td {
+    border-bottom: 3px solid rgba(69, 112, 230, 1);
+}
+
+div.simprov-overlay-table td {
+    text-align: center;
+    width: 160px;
+    height: 160px;
+    word-wrap: break-word;
+}
+
+a.simprov-table-icons {
+    padding: 8px;
+    font-size: 24px;
+}
+
+a.simprov-table-link {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid rgba(80, 190, 230, 0.6);
+    transition: all 0.3s ease-out;
+}
+
+img.simprov-table-image {
+    width: 150px;
+    height: 150px;
+}
+
+div.simprov-overlay-table tr:nth-child(odd) {
+    background-color: rgba(69, 112, 230, 0.05);
+}
+
+div.simprov-overlay-table tr:hover {
+    background-color: rgba(170, 240, 209, 0.1);
+}
+
+span.simprov-captured-span {
+    color: rgba(45, 93, 161, 0.8);
+}
+
+/*Overlay Annotation Section*/
+div.simprov-annotation-overlay {
+    display: none;
+    font-family: 'Roboto Slab Regular', serif;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    transform: translate(-50%, -50%);
+    padding: 1px;
+    background-color: rgba(217, 214, 207, 0.75);
+    border: thin solid rgba(0, 102, 255, 0.6);
+}
+
+div.simprov-annotation-overlay a {
+    text-decoration: none;
+}
+
+a.simprov-annotation-overlay-close {
+    color: rgba(45, 93, 161, 0.8);
+    position: absolute;
+    top: -21px;
+    right: -19px;
+    font-size: 18px;
+}
+
+a.simprov-annotation-overlay-close:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.70);
+}
+
+a.simprov-annotation-overlay-close:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+/*Overlay Annotation Table Container Section*/
+div.simprov-annotation-overlay-table-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 303px;
+    width: 302px;
+    overflow: auto;
+}
+
+/*Overlay Annotation Table Header Section*/
+div.simprov-annotation-overlay-table-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 302px;
+    z-index: 1;
+}
+
+div.simprov-annotation-overlay-table-header table {
+    border-collapse: collapse;
+}
+
+div.simprov-annotation-overlay-table-header th {
+    width: 148px;
+    border-top: none;
+    border-left: thin solid #e1e4ff;
+    font-weight: lighter;
+    color: #e1e4ff;
+    background-color: rgba(69, 112, 230, 1);
+}
+
+div.simprov-annotation-overlay-table-header th:first-child {
+    border-left: none;
+}
+
+div.simprov-annotation-overlay-table-header th:last-child {
+    border-right: thin solid rgba(69, 112, 230, 1);
+}
+
+/*Overlay Annotation Table Section*/
+div.simprov-annotation-overlay-table {
+    position: absolute;
+    top: 23px;
+    left: 0;
+    width: 302px;
+}
+
+div.simprov-annotation-overlay-table table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+div.simprov-annotation-overlay-table tr {
+    transition: all 0.3s ease-out;
+}
+
+div.simprov-annotation-overlay-table table a {
+    color: rgba(45, 93, 161, 0.8);
+    transition: all 0.3s ease-out;
+}
+
+div.simprov-annotation-overlay-table table a:hover {
+    color: rgb(80, 190, 230);
+    text-shadow: 0 0 1px rgba(80, 190, 230, 0.20);
+}
+
+div.simprov-annotation-overlay-table table a:active {
+    color: rgb(255, 153, 102);
+    text-shadow: 0 0 1px rgba(255, 153, 102, 0.70);
+}
+
+div.simprov-annotation-overlay-table td {
+    border: thin solid rgba(0, 102, 255, 0.6);
+    border-left: none;
+    border-top: none;
+}
+
+div.simprov-annotation-overlay-table td:last-child {
+    border-right:none;
+}
+
+div.simprov-annotation-overlay-table tr:last-child td {
+    border-bottom: 3px solid rgba(69, 112, 230, 1);
+}
+
+div.simprov-annotation-overlay-table td {
+    text-align: center;
+    width: 150px;
+    height: 24px;
+}
+
+a.simprov-annotation-table-icons {
+    padding: 5px;
+    font-size: 24px;
+}
+
+div.simprov-annotation-overlay-table tr:nth-child(odd) {
+    background-color: rgba(69, 112, 230, 0.05);
+}
+
+div.simprov-annotation-overlay-table tr:hover {
+    background-color: rgba(170, 240, 209, 0.1);
+}
+
+span.simprov-annotation-captured-span {
+    color: rgba(45, 93, 161, 0.8);
+}
+
+.ui-tooltip-content {
+    text-align: center;
+    font-family: 'Roboto Slab Regular', serif;
+    color: rgb(80, 190, 230);
+}
+
+.sweet-alert-font, .sweet-alert-confirm-font, .sweet-alert-cancel-font {
+    font-family: 'Roboto Slab Regular', serif;
+}
+
+.simprov-disabled{
+    cursor: not-allowed;
+}
