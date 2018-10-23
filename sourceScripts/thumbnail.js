@@ -3,8 +3,9 @@ import rasterizeHTML from './rasterizeHTML.allinone'; //TODO remember to update 
 export default class Thumbnail {
     constructor(configuration) {
         this.userInterfaceT = configuration;
-        this.requiredWidth = 300;
-        this.requiredHeight = 285;
+        // FIX for retina
+        this.requiredWidth = 300 * 2; //this.requiredWidth = 300;
+        this.requiredHeight = 285 * 2; //this.requiredHeight = 285;
         this.allInFrame = true;
         this.plainCSSString = '';
     }

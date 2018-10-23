@@ -7,7 +7,16 @@ div.simprov-ui {
     position: fixed;
     top: 20px;
     right: 25px;
+    font-family: 'Roboto Slab Regular', serif;
+    font-size: 16px;
 }
+
+.simprov-ui, .simprov-ui *, .simprov-ui *:before, .simprov-ui *:after {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
 
 /*Thumbnail Section*/
 div.simprov-thumbnail-scroll-content {
@@ -82,12 +91,18 @@ nav.simprov-vertical-bar {
     border-right-width: thin;
     border-left-width: thin;
     border-radius: 3px 3px;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 nav.simprov-vertical-bar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 nav.simprov-vertical-bar ul a {
