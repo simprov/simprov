@@ -1,6 +1,6 @@
 # SIMProv
 
-A library for tracking the provenance of interactive Web applications
+A library for capturing and using provenance in client-side interactive Web applications
 
 # Installation instructions
 - npm install
