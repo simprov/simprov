@@ -1,8 +1,8 @@
 # SIMProv
 
-A library for capturing and using provenance in client-side interactive Web applications. More details about this can be found in the [paper](http://www.cis.umassd.edu/~dkoop/pubs/simprov.pdf):
+A library for capturing and using provenance in client-side interactive Web applications. More details about this can be found in the paper:
 
-*Enhancing web-based analytics applications through provenance.*  
+[*Enhancing web-based analytics applications through provenance.*](http://www.cis.umassd.edu/~dkoop/pubs/simprov.pdf)  
 A. Camisetty, C. Chandurkar, M. Sun, and D. Koop.  
 IEEE Trans. Vis. Comp. Graph. (Proc. of IEEE VIS 2018). To appear.  
 
